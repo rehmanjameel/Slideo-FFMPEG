@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/mediaId"
+            android:title="Media">
+
+            <menu>
+                <item
+                    android:id="@+id/createVideoId"
+                    android:icon="@drawable/ic_outline_video_file"
+                    android:iconTint="@color/black"
+                    android:title="Create Video" />
+
+                <item
+                    android:id="@+id/myVideosId"
+                    android:icon="@drawable/ic_baseline_slow_motion_video"
+                    android:iconTint="@color/black"
+                    android:title="My Videos" />
+            </menu>
+        </item>
+
+    </group>
+
+    <group
+        android:checkableBehavior="none">
+        <item
+            android:title="Profile">
+            <menu>
+                <item
+                    android:id="@+id/loginId"
+                    android:title="Login"
+                    android:icon="@drawable/ic_baseline_login"/>
+
+                <item
+                    android:id="@+id/nav_logout"
+                    android:title="Logout"
+                    android:icon="@drawable/ic_baseline_logout"/>
+            </menu>
+        </item>
+    </group>
+
+</menu>

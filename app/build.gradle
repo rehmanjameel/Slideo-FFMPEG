@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android-extensions'
 }
 
 android {
@@ -30,6 +31,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures{
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -44,4 +48,6 @@ dependencies {
 
     //Splash screen migration in lower than android 12
     implementation 'androidx.core:core-splashscreen:1.0.0'
+    //Dependency for extending ViewModel class
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
 }
