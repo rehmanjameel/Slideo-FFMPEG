@@ -19,6 +19,16 @@
                     android:icon="@drawable/ic_baseline_slow_motion_video"
                     android:iconTint="@color/black"
                     android:title="My Videos" />
+
+                <item
+                    android:id="@+id/loginId"
+                    android:title="Login"
+                    android:icon="@drawable/ic_baseline_login"/>
+
+                <item
+                    android:id="@+id/profileId"
+                    android:title="Profile"
+                    android:icon="@drawable/ic_baseline_person_24"/>
             </menu>
         </item>
 
@@ -27,13 +37,8 @@
     <group
         android:checkableBehavior="none">
         <item
-            android:title="Profile">
+            android:title="">
             <menu>
-                <item
-                    android:id="@+id/loginId"
-                    android:title="Login"
-                    android:icon="@drawable/ic_baseline_login"/>
-
                 <item
                     android:id="@+id/nav_logout"
                     android:title="Logout"

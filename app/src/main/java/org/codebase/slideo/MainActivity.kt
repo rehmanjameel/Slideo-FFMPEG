@@ -66,11 +66,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        myDrawerLayoutId.openDrawer(navMenuId)
+//        myDrawerLayoutId.openDrawer(navMenuId)
         return true
     }
 
-    // override the onBackPressed() function to close the Drawer when the back button is clicked
+//     override the onBackPressed() function to close the Drawer when the back button is clicked
     override fun onBackPressed() {
         if (this.myDrawerLayoutId.isDrawerOpen(GravityCompat.START)) {
             this.myDrawerLayoutId.closeDrawer(GravityCompat.START)

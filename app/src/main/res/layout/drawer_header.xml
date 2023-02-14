@@ -3,31 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:background="@color/persian_green"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginStart="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
             android:id="@+id/headerImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:scaleType="fitXY"
+            android:layout_marginBottom="5dp"
             android:layout_gravity="center"
-            android:layout_margin="20dp"
-            android:layout_marginTop="0dp"
-            android:src="@drawable/slideo_logo" />
+            android:src="@drawable/slideo_logo"
+            android:contentDescription="@string/app_name" />
 
         <TextView
             android:id="@+id/headerProfileNameId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Slideo"
+            android:text="@string/app_name"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:layout_gravity="center"
