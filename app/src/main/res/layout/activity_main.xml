@@ -6,18 +6,20 @@
     android:layout_height="match_parent"
     xmlns:local="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
+    tools:ignore="UseCompoundDrawables"
     android:id="@+id/myDrawerLayoutId"
     tools:context=".MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/my_awesome_toolbar"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            app:title="Slideo"
+            app:title="slideo"
             app:titleTextColor="@color/white"
             android:minHeight="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -109,7 +111,9 @@
                         android:textColor="@color/white"/>
 
                 </LinearLayout>
+
             </androidx.cardview.widget.CardView>
+
         </LinearLayout>
 
     </RelativeLayout>
