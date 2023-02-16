@@ -38,6 +38,7 @@
             android:layout_below="@id/my_awesome_toolbar">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/createVideoCardId"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
@@ -76,6 +77,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/myVideosCardId"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"

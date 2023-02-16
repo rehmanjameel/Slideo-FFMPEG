@@ -11,7 +11,9 @@ dependencyResolutionManagement {
         google()
         jcenter()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 rootProject.name = "Slideo"
 include ':app'
+include ':SSffmpegVideoOperation'
