@@ -59,5 +59,7 @@ dependencies {
     // ExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer:2.18.3'
 
+    implementation 'org.jcodec:jcodec:0.2.3'
+
     implementation project(':SSffmpegVideoOperation')
 }

@@ -24,11 +24,16 @@ class CombineImages : AppCompatActivity() {
     private var playbackPosition = 0L
     private var exoPlayer: ExoPlayer? = null
     var mOrientationListener: OrientationEventListener? = null
+    lateinit var videoPath: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_combine_images)
 
+        supportActionBar?.hide()
+
+        videoPath = intent.getStringExtra("video_path").toString()
+        Log.e("vedo path ", videoPath)
         preparePlayer()
         setFullScreen()
     }
@@ -41,9 +46,9 @@ class CombineImages : AppCompatActivity() {
         player.player = exoPlayer
 
         exoPlayer?.apply {
-            player.scaleX = -1f
-//            setMediaItem(MediaItem.fromUri(App.getString("video_uri")))
-            setMediaSource(buildMediaSource())
+            player.scaleX = 1f
+            setMediaItem(MediaItem.fromUri(videoPath))
+//            setMediaSource(buildMediaSource())
             seekTo(playbackPosition)
             playWhenReady = playWhenReady
             prepare()

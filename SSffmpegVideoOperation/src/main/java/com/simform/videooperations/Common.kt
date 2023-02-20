@@ -1,20 +1,21 @@
 package com.simform.videooperations
 
+import android.R.attr.data
 import android.content.Context
 import android.content.Intent
+import android.content.res.AssetFileDescriptor
 import android.media.MediaExtractor
 import android.media.MediaFormat
+import android.os.Environment
 import android.text.TextUtils
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.config.Configurations
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileWriter
-import java.io.IOException
+import java.io.*
 import java.text.DecimalFormat
-import java.util.Formatter
-import java.util.Locale
+import java.util.*
+
 
 /**
  * Created by Ashvin Vavaliya on 24,November,2020
@@ -122,6 +123,7 @@ object Common {
                         .setCheckPermission(true)
                         .setShowImages(true)
                         .setShowVideos(false)
+                        .setShowAudios(true)
                         .enableImageCapture(true)
                         .enableVideoCapture(false)
                         .setMaxSelection(maxSelection)
@@ -161,6 +163,46 @@ object Common {
             }
         }
     }
+
+//    fun saveIntoInternal() {
+//        var newfile: File
+//
+//        val videoAsset: AssetFileDescriptor = getContentResolver().openAssetFileDescriptor(
+//            data, "r"
+//        )
+//        val `in`: FileInputStream = videoAsset.createInputStream()
+//        val filepath: File = Environment.getExternalStorageDirectory()
+//        val dir = File(filepath.absolutePath + "/" + "Your Folder Name" + "/")
+//        if (!dir.exists()) {
+//            dir.mkdirs()
+//        }
+//
+//        newfile = File(dir, "save_" + System.currentTimeMillis() + ".mp4")
+//
+//        if (newfile.exists()) newfile.delete()
+//
+//
+//        val out: OutputStream = FileOutputStream(newfile)
+//
+//        // Copy the bits from instream to outstream
+//        // Copy the bits from instream to outstream
+//        val buf = ByteArray(1024)
+//        var len: Int
+//
+//        while (`in`.read(buf).also { len = it } > 0) {
+//            out.write(buf, 0, len)
+//        }
+//
+//        `in`.close()
+//        out.close()
+//
+//        Log.v("", "Copy file successful.")
+//
+//
+////        videoUri = data.getData()
+////        videoview.setVideoURI(videoUri)
+////        videoview.start()
+//    }
 
     fun getFilePath(context: Context, fileExtension: String) : String {
         val dir = File(context.getExternalFilesDir(Common.OUT_PUT_DIR).toString())

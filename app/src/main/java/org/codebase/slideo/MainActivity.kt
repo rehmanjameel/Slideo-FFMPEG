@@ -1,24 +1,39 @@
 package org.codebase.slideo
 
+import android.Manifest.permission.*
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
+import com.jaiselrahman.filepicker.activity.FilePickerActivity
+import com.jaiselrahman.filepicker.model.MediaFile
+import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.codebase.slideo.videoProcessActivity.CombineImages
 import org.codebase.slideo.viewmodel.SplashScreenViewModel
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, FileSelection {
 
     var toolbar: androidx.appcompat.widget.Toolbar? = null
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    var mediaFiles: List<MediaFile>? = null
+    private var isImageSelected: Boolean = false
+    val ffmpegQueryExtension = FFmpegQueryExtension()
+
 
     private val splashViewModel = SplashScreenViewModel()
 
@@ -45,7 +60,39 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navMenuId.setNavigationItemSelectedListener(this)
 
         createVideoCardId.setOnClickListener {
-            startActivity(Intent(this, CombineImages::class.java))
+            if (checkPermissions()) {
+                //Select images from gallery to make video
+                Common.selectFile(this, maxSelection = 6, isImageSelection = true, isAudioSelection = false)
+            } else {
+                checkPermissions()
+            }
+//            startActivity(Intent(this, CombineImages::class.java))
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && data != null) {
+            mediaFiles = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES)
+            Log.e("mdeia files ", mediaFiles.toString())
+            (this as FileSelection).selectedFiles(mediaFiles,requestCode)
+        }
+    }
+
+    override fun selectedFiles(mediaFiles: List<MediaFile>?, requestCode: Int) {
+        when (requestCode) {
+            Common.IMAGE_FILE_REQUEST_CODE -> {
+                if (mediaFiles != null && mediaFiles.isNotEmpty()) {
+                    val size: Int = mediaFiles.size
+                    tvInputPathImage.text = "$size" + (if (size == 1) " Image " else " Images ") + "selected"
+                    isImageSelected = true
+                    processStart()
+                    combineImagesProcess()
+                } else {
+                    Toast.makeText(this, "getString(R.string.image_not_selected_toast_message)", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
     }
@@ -71,6 +118,57 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    private fun processStop() {
+//        btnImagePath.isEnabled = true
+//        btnCombine.isEnabled = true
+        mProgressView.visibility = View.GONE
+    }
+
+    private fun processStart() {
+//        btnImagePath.isEnabled = false
+//        btnCombine.isEnabled = false
+        mProgressView.visibility = View.VISIBLE
+    }
+
+    fun combineImagesProcess() {
+        val outputPath = Common.getFilePath(this, Common.VIDEO)
+        val pathsList = ArrayList<Paths>()
+        mediaFiles?.let {
+            for (element in it) {
+                val paths = Paths()
+                paths.filePath = element.path
+                paths.isImageFile = true
+                pathsList.add(paths)
+            }
+
+            val query = ffmpegQueryExtension.combineImagesAndVideos(pathsList, 720, 1080,
+                3.toString(), outputPath)
+
+            CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
+                override fun process(logMessage: LogMessage) {
+                    tvInputPathImage.text = logMessage.text
+                }
+
+                override fun success() {
+//                    tvInputPathImage.text = String.format(getString(R.string.output_path), outputPath)
+                    Log.e("success", "video created successfully on $outputPath")
+                    val intent = Intent(this@MainActivity, CombineImages::class.java)
+                    intent.putExtra("video_path", outputPath)
+                    startActivity(intent)
+                    processStop()
+                }
+
+                override fun cancel() {
+                    processStop()
+                }
+
+                override fun failed() {
+                    processStop()
+                }
+            })
+        }
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         myDrawerLayoutId.openDrawer(navMenuId)
         return true
@@ -83,5 +181,94 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             super.onBackPressed()
         }
+    }
+
+    private fun checkPermissions() : Boolean{
+        //Ask for permissions
+        val externalStorageReadPermission: Int = ContextCompat.checkSelfPermission(
+            applicationContext, READ_EXTERNAL_STORAGE)
+        val externalStorageWritePermission: Int = ContextCompat.checkSelfPermission(
+            applicationContext, READ_EXTERNAL_STORAGE)
+        val cameraPermission: Int = ContextCompat.checkSelfPermission(
+            applicationContext, CAMERA)
+        val listPermissionNeeded: ArrayList<String> = ArrayList()
+
+        if (externalStorageReadPermission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionNeeded.add(READ_EXTERNAL_STORAGE)
+        }
+        if (externalStorageWritePermission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionNeeded.add(WRITE_EXTERNAL_STORAGE)
+        }
+        if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionNeeded.add(CAMERA)
+        }
+
+        if (listPermissionNeeded.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionNeeded.toTypedArray(), 1)
+        } else {
+//            isGranted = true
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            1 -> {
+                val permissionMap : HashMap<String, Int> = HashMap()
+
+                // Initialize the map with permissions
+                permissionMap[READ_EXTERNAL_STORAGE] = PackageManager.PERMISSION_GRANTED
+                permissionMap[WRITE_EXTERNAL_STORAGE] = PackageManager.PERMISSION_GRANTED
+                permissionMap[CAMERA] = PackageManager.PERMISSION_GRANTED
+
+                if (grantResults.isNotEmpty()) {
+                    for (i in permissions.indices) {
+                        permissionMap[permissions[i]] = grantResults[i]
+                    }
+                    if (permissionMap[READ_EXTERNAL_STORAGE] == PackageManager.PERMISSION_GRANTED &&
+                        permissionMap[WRITE_EXTERNAL_STORAGE] == PackageManager.PERMISSION_GRANTED &&
+                            permissionMap[CAMERA] == PackageManager.PERMISSION_GRANTED) {
+//                        isGranted = true
+
+//                        pickVideo()
+                        Log.d("Permissions", "All permissions granted")
+                    } else {
+//                        isGranted = false
+                        Log.d("Permissions", "Some permissions not granted ask again")
+
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE) ||
+                            ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE) ||
+                                ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA)) {
+                            showDialogOK("Storage Permission required for this app") { dialog, which ->
+                                when (which) {
+                                    DialogInterface.BUTTON_POSITIVE -> checkPermissions()
+                                    DialogInterface.BUTTON_NEGATIVE -> {
+                                        dialog.dismiss()
+                                    }
+                                }
+                            }
+                        } else {
+                            Toast.makeText(this, "Go to settings and enable permissions",
+                                Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //Dialog for permissions if permission not granted
+    private fun showDialogOK(message: String, okListener: DialogInterface.OnClickListener) {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(message)
+            .setPositiveButton("OK", okListener)
+            .setNegativeButton("Cancel", okListener)
+            .create()
+            .show()
     }
 }

@@ -119,8 +119,24 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tvInputPathImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="tect"
+            android:layout_below="@id/linearLayoutId"/>
+
     </RelativeLayout>
-    
+
+    <include
+        android:id="@+id/mProgressView"
+        layout="@layout/progress_view"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navMenuId"
         android:layout_width="wrap_content"
