@@ -15,6 +15,7 @@ import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Log
+import com.simform.videooperations.Common
 import kotlinx.android.synthetic.main.activity_combine_images.*
 import kotlinx.android.synthetic.main.custom_controller.*
 import org.codebase.slideo.R
@@ -33,6 +34,7 @@ class CombineImages : AppCompatActivity() {
         supportActionBar?.hide()
 
         videoPath = intent.getStringExtra("video_path").toString()
+        Common.loadVideoFromInternalStorage(videoPath)
         Log.e("vedo path ", videoPath)
         preparePlayer()
         setFullScreen()

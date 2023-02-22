@@ -1,18 +1,18 @@
 package org.codebase.slideo
 
 import android.Manifest.permission.*
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -25,6 +25,7 @@ import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.codebase.slideo.videoProcessActivity.CombineImages
 import org.codebase.slideo.viewmodel.SplashScreenViewModel
+import java.io.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, FileSelection {
 
@@ -34,8 +35,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var isImageSelected: Boolean = false
     val ffmpegQueryExtension = FFmpegQueryExtension()
 
-
     private val splashViewModel = SplashScreenViewModel()
+
+    companion object {
+        lateinit var context: Context
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +51,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         setContentView(R.layout.activity_main)
 
+        context = this
         setSupportActionBar(my_awesome_toolbar)
 
         actionBarDrawerToggle = ActionBarDrawerToggle(this, myDrawerLayoutId,
@@ -131,6 +136,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun combineImagesProcess() {
+//        val source = File(intent.getStringExtra("image_path")!!)
         val outputPath = Common.getFilePath(this, Common.VIDEO)
         val pathsList = ArrayList<Paths>()
         mediaFiles?.let {
@@ -152,6 +158,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 override fun success() {
 //                    tvInputPathImage.text = String.format(getString(R.string.output_path), outputPath)
                     Log.e("success", "video created successfully on $outputPath")
+                    saveVideoToInternalStorage(outputPath)
                     val intent = Intent(this@MainActivity, CombineImages::class.java)
                     intent.putExtra("video_path", outputPath)
                     startActivity(intent)
@@ -174,7 +181,36 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-//     override the onBackPressed() function to close the Drawer when the back button is clicked
+    fun saveVideoToInternalStorage(filePath: String) {
+        val newfile: File
+        try {
+            val currentFile = File(filePath)
+            val fileName = currentFile.name
+            val cw = ContextWrapper(this)
+            val directory: File = cw.getDir("videoDir", Context.MODE_PRIVATE)
+            newfile = File(directory, fileName)
+            if (currentFile.exists()) {
+                val `in`: InputStream = FileInputStream(currentFile)
+                val out: OutputStream = FileOutputStream(newfile)
+
+                // Copy the bits from instream to outstream
+                val buf = ByteArray(1024)
+                var len: Int
+                while (`in`.read(buf).also { len = it } > 0) {
+                    out.write(buf, 0, len)
+                }
+                `in`.close()
+                out.close()
+                Log.e("", "Video file saved successfully.")
+            } else {
+                Log.e("", "Video saving failed. Source file missing.")
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    //     override the onBackPressed() function to close the Drawer when the back button is clicked
     override fun onBackPressed() {
         if (this.myDrawerLayoutId.isDrawerOpen(GravityCompat.START)) {
             this.myDrawerLayoutId.closeDrawer(GravityCompat.START)

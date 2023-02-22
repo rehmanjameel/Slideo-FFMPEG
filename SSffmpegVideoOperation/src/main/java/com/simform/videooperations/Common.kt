@@ -1,15 +1,18 @@
 package com.simform.videooperations
 
-import android.R.attr.data
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.AssetFileDescriptor
 import android.media.MediaExtractor
 import android.media.MediaFormat
+import android.net.Uri
 import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.config.Configurations
 import java.io.*
@@ -164,45 +167,65 @@ object Common {
         }
     }
 
-//    fun saveIntoInternal() {
-//        var newfile: File
-//
-//        val videoAsset: AssetFileDescriptor = getContentResolver().openAssetFileDescriptor(
-//            data, "r"
-//        )
-//        val `in`: FileInputStream = videoAsset.createInputStream()
-//        val filepath: File = Environment.getExternalStorageDirectory()
-//        val dir = File(filepath.absolutePath + "/" + "Your Folder Name" + "/")
-//        if (!dir.exists()) {
-//            dir.mkdirs()
-//        }
-//
-//        newfile = File(dir, "save_" + System.currentTimeMillis() + ".mp4")
-//
-//        if (newfile.exists()) newfile.delete()
-//
-//
-//        val out: OutputStream = FileOutputStream(newfile)
-//
-//        // Copy the bits from instream to outstream
-//        // Copy the bits from instream to outstream
-//        val buf = ByteArray(1024)
-//        var len: Int
-//
-//        while (`in`.read(buf).also { len = it } > 0) {
-//            out.write(buf, 0, len)
-//        }
-//
-//        `in`.close()
-//        out.close()
-//
-//        Log.v("", "Copy file successful.")
-//
-//
-////        videoUri = data.getData()
-////        videoview.setVideoURI(videoUri)
-////        videoview.start()
-//    }
+    fun loadVideoFromInternalStorage(filePath: String) {
+        val uri: Uri = Uri.parse(Environment.getExternalStorageDirectory().toString() + filePath)
+        Log.e("uri path", uri.toString())
+//        myVideoView.setVideoURI(uri)
+    }
+
+    fun getInternalStorageDir(
+        internalStorageDir: String,
+        fileType: String,
+        dirType: String?): File {
+        val date = Date()
+        val milisec = java.lang.String.valueOf(date.time)
+        val photosDir = File(
+            Environment.getExternalStoragePublicDirectory(dirType).toString() + internalStorageDir
+        )
+        // Create imageDir
+        if (!photosDir.exists()) photosDir.mkdir()
+        return File(photosDir, milisec + fileType)
+    }
+
+    fun saveIntoInternal(context: Context, data: Intent) {
+        val newfile: File
+
+        val videoAsset: AssetFileDescriptor? = context.contentResolver?.openAssetFileDescriptor(
+            data.data!!, "r"
+        )
+        val `in`: FileInputStream = videoAsset!!.createInputStream()
+        val filepath: File = Environment.getExternalStorageDirectory()
+        val dir = File(filepath.absolutePath + "/" + "Your Folder Name" + "/")
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+
+        newfile = File(dir, "save_" + System.currentTimeMillis() + ".mp4")
+
+        if (newfile.exists()) newfile.delete()
+
+
+        val out: OutputStream = FileOutputStream(newfile)
+
+        // Copy the bits from instream to outstream
+        // Copy the bits from instream to outstream
+        val buf = ByteArray(1024)
+        var len: Int
+
+        while (`in`.read(buf).also { len = it } > 0) {
+            out.write(buf, 0, len)
+        }
+
+        `in`.close()
+        out.close()
+
+        Log.v("", "Copy file successful.")
+
+
+//        videoUri = data.getData()
+//        videoview.setVideoURI(videoUri)
+//        videoview.start()
+    }
 
     fun getFilePath(context: Context, fileExtension: String) : String {
         val dir = File(context.getExternalFilesDir(Common.OUT_PUT_DIR).toString())
