@@ -15,7 +15,7 @@ import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Log
-import com.simform.videooperations.Common
+import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_combine_images.*
 import kotlinx.android.synthetic.main.custom_controller.*
 import org.codebase.slideo.R
@@ -26,6 +26,8 @@ class CombineImages : AppCompatActivity() {
     private var exoPlayer: ExoPlayer? = null
     var mOrientationListener: OrientationEventListener? = null
     lateinit var videoPath: String
+    val ffmpegQueryExtension = FFmpegQueryExtension()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,15 +83,6 @@ class CombineImages : AppCompatActivity() {
                 )
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 
-//                buttonId.visibility = View.GONE
-//                buttonIdFlip.visibility = View.GONE
-//                pickVideoButtonId.visibility = View.GONE
-//                window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-//                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
-//                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                supportActionBar?.hide()
-//                window.requestFeature(Window.FEATURE_ACTION_BAR)
-//                supportActionBar?.hide()
             } else {
                 imageViewFullScreen.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -98,50 +91,56 @@ class CombineImages : AppCompatActivity() {
                     )
                 )
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-//                buttonId.visibility = View.VISIBLE
-//                buttonIdFlip.visibility = View.VISIBLE
-//                pickVideoButtonId.visibility = View.VISIBLE
-
             }
             isFullScreen = !isFullScreen
         }
     }
 
-//    private fun setOrientation() {
-//        mOrientationListener = object : OrientationEventListener(
-//            this,
-//            SensorManager.SENSOR_DELAY_NORMAL
-//        ) {
-//            override fun onOrientationChanged(orientation: Int) {
-//                Log.e(
-//                    "DEBUG_TAG",
-//                    "Orientation changed to $orientation"
-//                )
-//
-//                when (orientation) {
-//                    in 1..89 -> {
-//                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-//                        if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED) {
-//                            buttonId.visibility = View.INVISIBLE
-//                        }
-//                    }
-//                    in 180 .. 360 -> {
-//                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-//
-//                        if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-//                            buttonId.visibility = View.INVISIBLE
-//                        }
-//                    }
-//                    in 90 .. 180 -> {
-//                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
-//                        if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-//                            buttonId.visibility = View.INVISIBLE
-//                        }
-//                    }
-//                }
-//            }
+    private fun addTextProcess() {
+        val outputPath = Common.getFilePath(this, Common.VIDEO)
+//        val xPos = width?.let {
+//            (edtXPos.text.toString().toFloat().times(it)).div(100)
 //        }
-//    }
+//        val yPos = height?.let {
+//            (edtYPos.text.toString().toFloat().times(it)).div(100)
+//        }
+        val fontPath = Common.getFileFromAssets(this, "little_lord.ttf").absolutePath
+        val query = ffmpegQueryExtension.addTextOnVideo(
+            "tvInputPathVideo.text.toString()",
+            "edtText.text.toString()", 2f, 2f,
+            fontPath = fontPath, isTextBackgroundDisplay = true,
+            fontSize = 28, fontcolor = "red", output = outputPath)
+        CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
+            override fun process(logMessage: LogMessage) {
+//                tvOutputPath.text = logMessage.text
+            }
+
+            override fun success() {
+//                tvOutputPath.text = String.format(getString(R.string.output_path), outputPath)
+                processStop()
+            }
+
+            override fun cancel() {
+                processStop()
+            }
+
+            override fun failed() {
+                processStop()
+            }
+        })
+    }
+
+    private fun processStop() {
+//        btnVideoPath.isEnabled = true
+//        btnAdd.isEnabled = true
+//        mProgressView.visibility = View.GONE
+    }
+
+    private fun processStart() {
+//        btnVideoPath.isEnabled = false
+//        btnAdd.isEnabled = false
+//        mProgressView.visibility = View.VISIBLE
+    }
 
     override fun onStop() {
         super.onStop()

@@ -1,7 +1,6 @@
 package com.simform.videooperations
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.AssetFileDescriptor
 import android.media.MediaExtractor
@@ -11,8 +10,6 @@ import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.config.Configurations
 import java.io.*
@@ -228,7 +225,7 @@ object Common {
     }
 
     fun getInternalPath(context: Context, fileExtension: String): String {
-        val mydir = context.getDir("users", Context.MODE_PRIVATE) //Creating an internal dir;
+        val mydir = context.getDir("saved_videos", Context.MODE_PRIVATE) //Creating an internal dir;
 
         if (!mydir.exists()) {
             mydir.mkdirs()

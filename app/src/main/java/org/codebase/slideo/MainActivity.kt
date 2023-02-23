@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         createVideoCardId.setOnClickListener {
             if (checkPermissions()) {
                 //Select images from gallery to make video
-                Common.selectFile(this, maxSelection = 6, isImageSelection = true, isAudioSelection = false)
+                Common.selectFile(this, maxSelection = 6, isImageSelection = true, isAudioSelection = true)
             } else {
                 checkPermissions()
             }
@@ -136,8 +136,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun combineImagesProcess() {
-//        val source = File(intent.getStringExtra("image_path")!!)
-        val outputPath = Common.getFilePath(this, Common.VIDEO)
+        val outputPath = Common.getInternalPath(this, Common.VIDEO)
         val pathsList = ArrayList<Paths>()
         mediaFiles?.let {
             for (element in it) {
@@ -159,7 +158,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                    tvInputPathImage.text = String.format(getString(R.string.output_path), outputPath)
                     Log.e("success", "video created successfully on $outputPath")
 //                    saveVideoToInternalStorage("outputPath")
-                    Common.writeFileOnInternalStorage(context, Common.VIDEO, outputPath)
+//                    Common.writeFileOnInternalStorage(context, Common.VIDEO, outputPath)
                     val intent = Intent(this@MainActivity, CombineImages::class.java)
                     intent.putExtra("video_path", outputPath)
                     startActivity(intent)
