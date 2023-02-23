@@ -158,7 +158,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 override fun success() {
 //                    tvInputPathImage.text = String.format(getString(R.string.output_path), outputPath)
                     Log.e("success", "video created successfully on $outputPath")
-                    saveVideoToInternalStorage(outputPath)
+//                    saveVideoToInternalStorage("outputPath")
+                    Common.writeFileOnInternalStorage(context, Common.VIDEO, outputPath)
                     val intent = Intent(this@MainActivity, CombineImages::class.java)
                     intent.putExtra("video_path", outputPath)
                     startActivity(intent)
@@ -199,6 +200,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 while (`in`.read(buf).also { len = it } > 0) {
                     out.write(buf, 0, len)
                 }
+                Log.e("", "Video file saved on $out.")
+
                 `in`.close()
                 out.close()
                 Log.e("", "Video file saved successfully.")

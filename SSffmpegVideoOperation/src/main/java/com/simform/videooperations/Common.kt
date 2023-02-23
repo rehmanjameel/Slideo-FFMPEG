@@ -227,6 +227,33 @@ object Common {
 //        videoview.start()
     }
 
+    fun getInternalPath(context: Context, fileExtension: String): String {
+        val mydir = context.getDir("users", Context.MODE_PRIVATE) //Creating an internal dir;
+
+        if (!mydir.exists()) {
+            mydir.mkdirs()
+        }
+
+        var extension:String? = null
+        when {
+            TextUtils.equals(fileExtension, IMAGE) -> {
+                extension = "%03d.jpg"
+            }
+            TextUtils.equals(fileExtension, VIDEO) -> {
+                extension = ".mp4"
+            }
+            TextUtils.equals(fileExtension, GIF) -> {
+                extension = ".gif"
+            }
+            TextUtils.equals(fileExtension, MP3) -> {
+                extension = ".mp3"
+            }
+        }
+        Log.e("my dir", mydir.path)
+        val dest = File(mydir.path + File.separator + Common.OUT_PUT_DIR + System.currentTimeMillis().div(1000L) + extension)
+        return dest.absolutePath
+    }
+
     fun getFilePath(context: Context, fileExtension: String) : String {
         val dir = File(context.getExternalFilesDir(Common.OUT_PUT_DIR).toString())
         if (!dir.exists()) {
