@@ -62,10 +62,11 @@
             android:layout_marginTop="5dp">
 
             <LinearLayout
-                android:id="@+id/linearId1"
+                android:id="@+id/textLayoutId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:gravity="center"
                 android:layout_marginEnd="10dp">
 
                 <ImageView
@@ -84,18 +85,18 @@
 
 
             <LinearLayout
-                android:id="@+id/linearId2"
+                android:id="@+id/musicLayoutId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/linearId1">
+                android:gravity="center"
+                android:layout_toEndOf="@id/textLayoutId">
 
                 <ImageView
                     android:id="@+id/musicImageId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/textImageId"
                     android:src="@drawable/ic_outline_library_music"/>
 
                 <TextView
@@ -110,5 +111,14 @@
 
 
     </HorizontalScrollView>
+
+    <include
+        android:id="@+id/mProgressView"
+        layout="@layout/progress_view"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

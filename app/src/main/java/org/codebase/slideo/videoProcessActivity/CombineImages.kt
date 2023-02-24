@@ -38,11 +38,16 @@ class CombineImages : AppCompatActivity() {
         videoPath = intent.getStringExtra("video_path").toString()
         Common.loadVideoFromInternalStorage(videoPath)
         Log.e("vedo path ", videoPath)
-        preparePlayer()
-        setFullScreen()
+        preparePlayer(videoPath)
+//        setFullScreen()
+
+        textLayoutId.setOnClickListener {
+            processStart()
+            addTextProcess()
+        }
     }
 
-    private fun preparePlayer() {
+    private fun preparePlayer(videoPath: String) {
         exoPlayer = ExoPlayer.Builder(this).setSeekBackIncrementMs(INCREMENT_MILLIS)
             .setSeekForwardIncrementMs(INCREMENT_MILLIS)
             .build()
@@ -106,10 +111,10 @@ class CombineImages : AppCompatActivity() {
 //        }
         val fontPath = Common.getFileFromAssets(this, "little_lord.ttf").absolutePath
         val query = ffmpegQueryExtension.addTextOnVideo(
-            "tvInputPathVideo.text.toString()",
-            "edtText.text.toString()", 2f, 2f,
+            videoPath,
+            "edtText.text.toString()", 200f, 1000f,
             fontPath = fontPath, isTextBackgroundDisplay = true,
-            fontSize = 28, fontcolor = "red", output = outputPath)
+            fontSize = 50, fontcolor = "red", output = outputPath)
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
             override fun process(logMessage: LogMessage) {
 //                tvOutputPath.text = logMessage.text
@@ -117,6 +122,10 @@ class CombineImages : AppCompatActivity() {
 
             override fun success() {
 //                tvOutputPath.text = String.format(getString(R.string.output_path), outputPath)
+                if (exoPlayer != null) {
+                    exoPlayer?.clearVideoSurface()
+                }
+                preparePlayer(outputPath)
                 processStop()
             }
 
@@ -133,13 +142,13 @@ class CombineImages : AppCompatActivity() {
     private fun processStop() {
 //        btnVideoPath.isEnabled = true
 //        btnAdd.isEnabled = true
-//        mProgressView.visibility = View.GONE
+        mProgressView.visibility = View.GONE
     }
 
     private fun processStart() {
 //        btnVideoPath.isEnabled = false
 //        btnAdd.isEnabled = false
-//        mProgressView.visibility = View.VISIBLE
+        mProgressView.visibility = View.VISIBLE
     }
 
     override fun onStop() {
