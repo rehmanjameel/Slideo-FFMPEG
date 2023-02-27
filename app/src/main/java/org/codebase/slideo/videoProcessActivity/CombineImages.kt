@@ -1,13 +1,17 @@
 package org.codebase.slideo.videoProcessActivity
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.hardware.SensorManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.OrientationEventListener
 import android.view.View
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -43,7 +47,8 @@ class CombineImages : AppCompatActivity() {
 
         textLayoutId.setOnClickListener {
             processStart()
-            addTextProcess()
+            alertDialogDemo()
+//            addTextProcess()
         }
     }
 
@@ -172,6 +177,38 @@ class CombineImages : AppCompatActivity() {
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             imageViewFullScreen.performClick()
         } else super.onBackPressed()
+    }
+
+    private fun alertDialogDemo() {
+        // get alert_dialog.xml view
+        val li: LayoutInflater = LayoutInflater.from(applicationContext)
+        val promptsView: View = li.inflate(R.layout.alert_dialog_layout, null)
+        val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+
+        // set alert_dialog.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView)
+        val userInput: EditText = promptsView.findViewById<View>(R.id.etUserInput) as EditText
+
+        // set dialog message
+        alertDialogBuilder
+            .setCancelable(false)
+            .setPositiveButton("OK") { dialog, id -> // get user input and set it to result
+                // edit text
+                Toast.makeText(
+                    applicationContext,
+                    "Entered: " + userInput.getText().toString(),
+                    Toast.LENGTH_LONG
+                ).show()
+                addTextProcess()
+            }
+            .setNegativeButton("Cancel"
+            ) { dialog, id -> dialog.cancel() }
+
+        // create alert dialog
+        val alertDialog: AlertDialog = alertDialogBuilder.create()
+
+        // show it
+        alertDialog.show()
     }
 
     companion object {
