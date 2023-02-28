@@ -78,7 +78,9 @@ public class FFmpegQueryExtension {
         return inputs.toArray(arrayOfNulls<String>(inputs.size))
     }
 
-    fun addTextOnVideo(inputVideo: String, textInput: String, posX: Float?, posY: Float?, fontPath: String, isTextBackgroundDisplay: Boolean, fontSize: Int, fontcolor: String, output: String): Array<String> {
+    fun addTextOnVideo(inputVideo: String, textInput: String, posX: Float?, posY: Float?, fontPath: String,
+                       isTextBackgroundDisplay: Boolean, fontSize: Int, fontcolor: String, output: String,
+                       startTime: String?, endTime: String?): Array<String> {
         val inputs: ArrayList<String> = ArrayList()
         var borderQuery = ""
         if (isTextBackgroundDisplay) {
@@ -88,7 +90,7 @@ public class FFmpegQueryExtension {
             add("-i")
             add(inputVideo)
             add("-vf")
-            add("drawtext=text='$textInput':fontfile=$fontPath:x=$posX:y=$posY:fontsize=$fontSize:fontcolor=$fontcolor${borderQuery.trim()}:enable='between(t,1,3)")
+            add("drawtext=text='$textInput':fontfile=$fontPath:x=$posX:y=$posY:fontsize=$fontSize:fontcolor=$fontcolor${borderQuery.trim()}:enable='between(t,$startTime,$endTime)")
             add("-c:a")
             add("copy")
             add("-preset")

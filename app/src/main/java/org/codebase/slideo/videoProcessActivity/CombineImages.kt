@@ -19,8 +19,10 @@ import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Log
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_combine_images.*
+import kotlinx.android.synthetic.main.alert_dialog_layout.*
 import kotlinx.android.synthetic.main.custom_controller.*
 import org.codebase.slideo.R
 
@@ -106,7 +108,7 @@ class CombineImages : AppCompatActivity() {
         }
     }
 
-    private fun addTextProcess() {
+    private fun addTextProcess(textInput: String, startTime: String, endTime: String) {
         val outputPath = Common.getFilePath(this, Common.VIDEO)
 //        val xPos = width?.let {
 //            (edtXPos.text.toString().toFloat().times(it)).div(100)
@@ -117,9 +119,9 @@ class CombineImages : AppCompatActivity() {
         val fontPath = Common.getFileFromAssets(this, "little_lord.ttf").absolutePath
         val query = ffmpegQueryExtension.addTextOnVideo(
             videoPath,
-            "edtText.text.toString()", 200f, 1000f,
+            textInput, 200f, 1000f,
             fontPath = fontPath, isTextBackgroundDisplay = true,
-            fontSize = 50, fontcolor = "red", output = outputPath)
+            fontSize = 50, fontcolor = "red", output = outputPath, startTime, endTime)
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
             override fun process(logMessage: LogMessage) {
 //                tvOutputPath.text = logMessage.text
@@ -183,11 +185,13 @@ class CombineImages : AppCompatActivity() {
         // get alert_dialog.xml view
         val li: LayoutInflater = LayoutInflater.from(applicationContext)
         val promptsView: View = li.inflate(R.layout.alert_dialog_layout, null)
-        val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val alertDialogBuilder: MaterialAlertDialogBuilder = MaterialAlertDialogBuilder(this)
 
         // set alert_dialog.xml to alertdialog builder
         alertDialogBuilder.setView(promptsView)
         val userInput: EditText = promptsView.findViewById<View>(R.id.etUserInput) as EditText
+        val startTime: EditText = promptsView.findViewById<View>(R.id.etStartTime) as EditText
+        val endTime: EditText = promptsView.findViewById<View>(R.id.etEndTime) as EditText
 
         // set dialog message
         alertDialogBuilder
@@ -196,10 +200,10 @@ class CombineImages : AppCompatActivity() {
                 // edit text
                 Toast.makeText(
                     applicationContext,
-                    "Entered: " + userInput.getText().toString(),
+                    "Entered: " + userInput.text.toString(),
                     Toast.LENGTH_LONG
                 ).show()
-                addTextProcess()
+                addTextProcess(userInput.text.toString(), startTime.text.toString(), endTime.text.toString())
             }
             .setNegativeButton("Cancel"
             ) { dialog, id -> dialog.cancel() }
