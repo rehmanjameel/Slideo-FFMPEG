@@ -17,12 +17,17 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_main.*
+import org.codebase.slideo.ui.VideosActivity
+import org.codebase.slideo.ui.VideosLibraryFragment
 import org.codebase.slideo.videoProcessActivity.CombineImages
 import org.codebase.slideo.viewmodel.SplashScreenViewModel
 import java.io.*
@@ -71,9 +76,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             } else {
                 checkPermissions()
             }
-//            startActivity(Intent(this, CombineImages::class.java))
         }
 
+        myVideosCardId.setOnClickListener {
+            Log.e("clicking ob button", "$it")
+            val intent = Intent(this, VideosActivity::class.java)
+            startActivity(intent)
+        }
+
+    }
+
+    fun replaceFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frame_content, fragment)
+        fragmentTransaction.addToBackStack(fragment.toString())
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        fragmentTransaction.commit()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

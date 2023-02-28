@@ -146,4 +146,10 @@
         android:fitsSystemWindows="true"
         android:layout_gravity="start"/>
 
+    <FrameLayout
+        android:id="@+id/frame_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
 </androidx.drawerlayout.widget.DrawerLayout>

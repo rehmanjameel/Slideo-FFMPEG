@@ -47,8 +47,9 @@ class CombineImages : AppCompatActivity() {
         preparePlayer(videoPath)
 //        setFullScreen()
 
+        imageViewFullScreen.visibility = View.GONE
+
         textLayoutId.setOnClickListener {
-            processStart()
             alertDialogDemo()
 //            addTextProcess()
         }
@@ -196,13 +197,15 @@ class CombineImages : AppCompatActivity() {
         // set dialog message
         alertDialogBuilder
             .setCancelable(false)
-            .setPositiveButton("OK") { dialog, id -> // get user input and set it to result
+            .setPositiveButton("Add") { dialog, id -> // get user input and set it to result
                 // edit text
                 Toast.makeText(
                     applicationContext,
                     "Entered: " + userInput.text.toString(),
                     Toast.LENGTH_LONG
                 ).show()
+                processStart()
+
                 addTextProcess(userInput.text.toString(), startTime.text.toString(), endTime.text.toString())
             }
             .setNegativeButton("Cancel"
