@@ -302,4 +302,14 @@ object Common {
             e.printStackTrace()
         }
     }
+
+    fun shareVideo(context: Context, paths: String) {
+//        val pictureUri = Uri.fromFile(File(paths))
+        val shareIntent = Intent()
+        shareIntent.action = Intent.ACTION_SEND
+        shareIntent.type = "video/*"
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(paths));
+        shareIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        context.startActivity(Intent.createChooser(shareIntent, "share videos"))
+    }
 }

@@ -1,7 +1,6 @@
 package org.codebase.slideo.videoProcessActivity
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
@@ -25,6 +24,9 @@ import kotlinx.android.synthetic.main.activity_combine_images.*
 import kotlinx.android.synthetic.main.alert_dialog_layout.*
 import kotlinx.android.synthetic.main.custom_controller.*
 import org.codebase.slideo.R
+import org.codebase.slideo.db.RoomDB
+import org.codebase.slideo.models.SaveVideoModel
+import org.codebase.slideo.utils.App
 
 class CombineImages : AppCompatActivity() {
 
@@ -33,6 +35,8 @@ class CombineImages : AppCompatActivity() {
     var mOrientationListener: OrientationEventListener? = null
     lateinit var videoPath: String
     val ffmpegQueryExtension = FFmpegQueryExtension()
+    var videoOutPutPath = ""
+    lateinit var roomDB: RoomDB
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +56,13 @@ class CombineImages : AppCompatActivity() {
         textLayoutId.setOnClickListener {
             alertDialogDemo()
 //            addTextProcess()
+        }
+
+        roomDB = RoomDB.getDataBase(this)
+        saveVideoToDB.setOnClickListener {
+            Log.e("internal path", videoOutPutPath)
+            roomDB.saveVideoDao().addVideo(SaveVideoModel(0,
+                App.getString("video_output_path"), System.currentTimeMillis().toString()))
         }
     }
 
@@ -110,7 +121,7 @@ class CombineImages : AppCompatActivity() {
     }
 
     private fun addTextProcess(textInput: String, startTime: String, endTime: String) {
-        val outputPath = Common.getFilePath(this, Common.VIDEO)
+        videoOutPutPath = Common.getInternalPath(this, Common.VIDEO)
 //        val xPos = width?.let {
 //            (edtXPos.text.toString().toFloat().times(it)).div(100)
 //        }
@@ -122,7 +133,7 @@ class CombineImages : AppCompatActivity() {
             videoPath,
             textInput, 200f, 1000f,
             fontPath = fontPath, isTextBackgroundDisplay = true,
-            fontSize = 50, fontcolor = "red", output = outputPath, startTime, endTime)
+            fontSize = 50, fontcolor = "red", output = videoOutPutPath, startTime, endTime)
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
             override fun process(logMessage: LogMessage) {
 //                tvOutputPath.text = logMessage.text
@@ -133,7 +144,8 @@ class CombineImages : AppCompatActivity() {
                 if (exoPlayer != null) {
                     exoPlayer?.clearVideoSurface()
                 }
-                preparePlayer(outputPath)
+                preparePlayer(videoOutPutPath)
+                App.saveString("video_output_path", videoOutPutPath)
                 processStop()
             }
 

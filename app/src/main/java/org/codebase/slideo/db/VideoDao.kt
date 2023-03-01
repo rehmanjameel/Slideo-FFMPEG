@@ -10,15 +10,15 @@ import org.codebase.slideo.models.SaveVideoModel
 @Dao
 interface VideoDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addVideos(saveVideos: SaveVideoModel)
+    fun addVideo(saveVideos: SaveVideoModel)
 
-    @Query("Select * from saveVideoTable order by videoId ASC")
+    @Query("Select * from save_videos_table order by video_id ASC")
     fun getAllVideos(): LiveData<List<SaveVideoModel>>
 
-    @Query("Delete from saveVideoTable where videoId=: deleteVideoId")
-    suspend fun deleteVideo(deleteVideoId: Int)
+    @Query("Delete from save_videos_table where video_id= :deleteVideoId")
+    fun deleteVideo(deleteVideoId: Int)
 
-    @Query("Delete from saveVideTable")
+    @Query("Delete from save_videos_table")
     suspend fun deleteVideos()
 
 }

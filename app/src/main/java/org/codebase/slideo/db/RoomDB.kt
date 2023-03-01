@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import org.codebase.slideo.models.SaveVideoModel
 
-@Database(entities = [SaveVideoModel::class], version = 0, exportSchema = false)
+@Database(entities = [SaveVideoModel::class], version = 1, exportSchema = false)
 abstract class RoomDB: RoomDatabase() {
 
     abstract fun saveVideoDao(): VideoDao

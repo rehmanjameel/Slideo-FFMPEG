@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
                 override fun process(logMessage: LogMessage) {
-                    tvInputPathImage.text = logMessage.text
+//                    tvInputPathImage.text = logMessage.text
                 }
 
                 override fun success() {
