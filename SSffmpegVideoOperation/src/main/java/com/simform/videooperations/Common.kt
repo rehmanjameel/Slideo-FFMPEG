@@ -10,6 +10,7 @@ import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.config.Configurations
 import java.io.*
@@ -303,13 +304,34 @@ object Common {
         }
     }
 
-    fun shareVideo(context: Context, paths: String) {
-//        val pictureUri = Uri.fromFile(File(paths))
-        val shareIntent = Intent()
-        shareIntent.action = Intent.ACTION_SEND
-        shareIntent.type = "video/*"
-        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(paths));
-        shareIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        context.startActivity(Intent.createChooser(shareIntent, "share videos"))
+    fun startFileShareIntent(context: Context, filePath: String, fileType: String) { // pass the file path where the actual file is located.
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "$fileType/*"  // "*/*" will accepts all types of files, if you want specific then change it on your need.
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            putExtra(
+                Intent.EXTRA_SUBJECT,
+                "Sharing file from the AppName"
+            )
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "Sharing file from the AppName with some description"
+            )
+            val fileURI = FileProvider.getUriForFile(
+                context, context.packageName + ".provider",
+                File(filePath)
+            )
+            putExtra(Intent.EXTRA_STREAM, fileURI)
+        }
+        context.startActivity(Intent.createChooser(shareIntent, "share videos"), null)
     }
+
+//    fun shareVideo(context: Context, paths: String) {
+////        val pictureUri = Uri.fromFile(File(paths))
+//        val shareIntent = Intent()
+//        shareIntent.action = Intent.ACTION_SEND
+//        shareIntent.type = "video/*"
+//        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(paths))
+////        shareIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+//        context.startActivity(Intent.createChooser(shareIntent, "share videos"), null)
+//    }
 }

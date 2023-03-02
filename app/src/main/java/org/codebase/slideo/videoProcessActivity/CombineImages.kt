@@ -130,7 +130,7 @@ class CombineImages : AppCompatActivity() {
 //        }
         val fontPath = Common.getFileFromAssets(this, "little_lord.ttf").absolutePath
         val query = ffmpegQueryExtension.addTextOnVideo(
-            videoPath,
+            App.getString("video_output_path"),
             textInput, 200f, 1000f,
             fontPath = fontPath, isTextBackgroundDisplay = true,
             fontSize = 50, fontcolor = "red", output = videoOutPutPath, startTime, endTime)

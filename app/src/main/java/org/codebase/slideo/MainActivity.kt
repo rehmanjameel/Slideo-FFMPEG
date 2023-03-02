@@ -28,6 +28,7 @@ import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.codebase.slideo.ui.VideosActivity
 import org.codebase.slideo.ui.VideosLibraryFragment
+import org.codebase.slideo.utils.App
 import org.codebase.slideo.videoProcessActivity.CombineImages
 import org.codebase.slideo.viewmodel.SplashScreenViewModel
 import java.io.*
@@ -180,6 +181,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                    Common.writeFileOnInternalStorage(context, Common.VIDEO, outputPath)
                     val intent = Intent(this@MainActivity, CombineImages::class.java)
                     intent.putExtra("video_path", outputPath)
+                    App.saveString("video_output_path", outputPath)
                     startActivity(intent)
                     processStop()
                 }

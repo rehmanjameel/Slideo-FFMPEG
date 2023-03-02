@@ -56,7 +56,7 @@ class VideosLibraryAdapter(context: Context):
         }
 
         holder.itemView.shareVideoId.setOnClickListener {
-            Common.shareVideo(myContext, videoModel.path)
+            Common.startFileShareIntent(myContext, videoModel.path, "video")
         }
         holder.itemView.deleteVideoId.setOnClickListener {
             roomDB.saveVideoDao().deleteVideo(videoModel.videoId)
