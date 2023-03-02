@@ -1,6 +1,7 @@
 package org.codebase.slideo.videoProcessActivity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
@@ -19,13 +20,16 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Log
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_combine_images.*
 import kotlinx.android.synthetic.main.alert_dialog_layout.*
 import kotlinx.android.synthetic.main.custom_controller.*
+import org.codebase.slideo.MainActivity
 import org.codebase.slideo.R
 import org.codebase.slideo.db.RoomDB
 import org.codebase.slideo.models.SaveVideoModel
+import org.codebase.slideo.ui.AudioActivity
 import org.codebase.slideo.utils.App
 
 class CombineImages : AppCompatActivity() {
@@ -63,6 +67,15 @@ class CombineImages : AppCompatActivity() {
             Log.e("internal path", videoOutPutPath)
             roomDB.saveVideoDao().addVideo(SaveVideoModel(0,
                 App.getString("video_output_path"), System.currentTimeMillis().toString()))
+            Snackbar.make(this, it, "Video Saved Successfully!",
+                Snackbar.ANIMATION_MODE_SLIDE).show()
+        }
+
+        cancelVideoId.setOnClickListener {
+            onBackPressed()
+        }
+        musicImageId.setOnClickListener {
+//            startActivity(Intent(this, AudioActivity::class.java))
         }
     }
 

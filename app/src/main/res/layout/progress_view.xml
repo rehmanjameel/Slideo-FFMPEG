@@ -18,6 +18,8 @@
         <ProgressBar
             android:id="@+id/mProgress"
             android:layout_width="wrap_content"
+            style="?android:attr/progressBarStyleLarge"
+            android:indeterminateDrawable="@drawable/progress_bar_spin"
             android:layout_height="wrap_content"/>
 
         <TextView

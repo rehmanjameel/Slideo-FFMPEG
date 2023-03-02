@@ -19,6 +19,7 @@
         android:id="@+id/confirmButtonLayoutId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/persian_green"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -28,7 +29,7 @@
             android:src="@drawable/ic_outline_check_circle_24"
             android:layout_alignParentEnd="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="10dp"/>
+            android:padding="15dp"/>
 
         <ImageView
             android:id="@+id/cancelVideoId"
@@ -37,7 +38,7 @@
             android:src="@drawable/ic_outline_cancel_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_alignParentStart="true"
-            android:padding="10dp"/>
+            android:padding="15dp"/>
 
     </RelativeLayout>
 
@@ -49,6 +50,7 @@
         app:player_layout_id="@layout/exo_player_view"
         app:controller_layout_id="@layout/custom_controller"
         app:use_controller="true"
+        app:resize_mode="fill"
         app:layout_constraintTop_toBottomOf="@id/confirmButtonLayoutId"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

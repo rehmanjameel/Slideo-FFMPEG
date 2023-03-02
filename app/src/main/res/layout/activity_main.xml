@@ -126,6 +126,15 @@
             android:text="tect"
             android:layout_below="@id/linearLayoutId"/>
 
+        <Button
+            android:id="@+id/buttonAudioId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Test Audio"
+            android:visibility="invisible"
+            android:layout_below="@id/tvInputPathImage"
+            android:layout_marginTop="40dp"/>
+
     </RelativeLayout>
 
     <include
@@ -145,11 +154,5 @@
         app:headerLayout="@layout/drawer_header"
         android:fitsSystemWindows="true"
         android:layout_gravity="start"/>
-
-    <FrameLayout
-        android:id="@+id/frame_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
 
 </androidx.drawerlayout.widget.DrawerLayout>

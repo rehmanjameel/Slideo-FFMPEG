@@ -26,6 +26,7 @@ import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_main.*
+import org.codebase.slideo.ui.AudioActivity
 import org.codebase.slideo.ui.VideosActivity
 import org.codebase.slideo.ui.VideosLibraryFragment
 import org.codebase.slideo.utils.App
@@ -60,6 +61,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         context = this
         setSupportActionBar(my_awesome_toolbar)
 
+        checkPermissions()
+
         actionBarDrawerToggle = ActionBarDrawerToggle(this, myDrawerLayoutId,
             R.string.nav_open, R.string.nav_close)
 
@@ -85,16 +88,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
         }
 
+//        buttonAudioId.setOnClickListener {
+//            startActivity(Intent(this, AudioActivity::class.java))
+//        }
+
     }
 
-    fun replaceFragment(fragment: Fragment) {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.frame_content, fragment)
-        fragmentTransaction.addToBackStack(fragment.toString())
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        fragmentTransaction.commit()
-    }
+//    fun replaceFragment(fragment: Fragment) {
+//        val fragmentManager = supportFragmentManager
+//        val fragmentTransaction = fragmentManager.beginTransaction()
+//        fragmentTransaction.replace(R.id.frame_content, fragment)
+//        fragmentTransaction.addToBackStack(fragment.toString())
+//        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//        fragmentTransaction.commit()
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -166,7 +173,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 pathsList.add(paths)
             }
 
-            val query = ffmpegQueryExtension.combineImagesAndVideos(pathsList, 720, 1080,
+            val query = ffmpegQueryExtension.combineImagesAndVideos(pathsList, 1280, 720,
                 3.toString(), outputPath)
 
             CallBackOfQuery().callQuery(query, object : FFmpegCallBack {

@@ -2,6 +2,7 @@ package org.codebase.slideo.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.simform.videooperations.Common
 import kotlinx.android.synthetic.main.custom_controller.view.*
 import kotlinx.android.synthetic.main.video_view_layout.view.*
 import org.codebase.slideo.R
 import org.codebase.slideo.db.RoomDB
 import org.codebase.slideo.models.SaveVideoModel
+
 
 class VideosLibraryAdapter(context: Context):
     RecyclerView.Adapter<VideosLibraryAdapter.VideosViewHolder>() {
@@ -36,7 +39,7 @@ class VideosLibraryAdapter(context: Context):
 
     override fun onBindViewHolder(holder: VideosViewHolder, position: Int) {
 
-        val videoModel = videosArrayList[position]
+        videoModel = videosArrayList[position]
 
         roomDB = RoomDB.getDataBase(myContext)
 
@@ -59,8 +62,24 @@ class VideosLibraryAdapter(context: Context):
             Common.startFileShareIntent(myContext, videoModel.path, "video")
         }
         holder.itemView.deleteVideoId.setOnClickListener {
-            roomDB.saveVideoDao().deleteVideo(videoModel.videoId)
-            notifyDataSetChanged()
+            val builder = MaterialAlertDialogBuilder(myContext)
+
+            builder.setIcon(R.drawable.ic_baseline_warning_amber_24)
+            builder.setTitle("Delete Video!")
+            builder.setMessage("Are you sure? Do you want to delete video?")
+            builder.setPositiveButton(
+                    "Yes") { dialogInterface, i ->
+                roomDB.saveVideoDao().deleteVideo(videoModel.videoId)
+                notifyDataSetChanged()
+            }
+
+            builder.setNegativeButton(
+                    "No"
+                ) { dialogInterface, i ->
+                dialogInterface.dismiss()
+            }
+
+            builder.show()
         }
     }
 
