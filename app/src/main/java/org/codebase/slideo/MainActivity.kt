@@ -30,6 +30,7 @@ import org.codebase.slideo.ui.AudioActivity
 import org.codebase.slideo.ui.VideosActivity
 import org.codebase.slideo.ui.VideosLibraryFragment
 import org.codebase.slideo.utils.App
+import org.codebase.slideo.utils.AsyncTaskResolver
 import org.codebase.slideo.videoProcessActivity.CombineImages
 import org.codebase.slideo.viewmodel.SplashScreenViewModel
 import java.io.*
@@ -88,9 +89,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
         }
 
-//        buttonAudioId.setOnClickListener {
-//            startActivity(Intent(this, AudioActivity::class.java))
-//        }
+        buttonAudioId.visibility = View.VISIBLE
+        buttonAudioId.setOnClickListener {
+            startActivity(Intent(this, AudioActivity::class.java))
+        }
 
     }
 
