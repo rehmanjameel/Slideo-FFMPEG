@@ -1,6 +1,8 @@
 package org.codebase.slideo.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.media.MediaPlayer
 import android.media.browse.MediaBrowser.MediaItem
 import android.net.Uri
@@ -17,12 +19,14 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.audio_items.view.*
 import org.codebase.slideo.R
 import org.codebase.slideo.models.AudioModel
+import org.codebase.slideo.utils.App
+import org.codebase.slideo.videoProcessActivity.CombineImages
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.logging.Handler
 import kotlin.collections.ArrayList
 
-class AudioAdapter(context: Context, private val audioArrayList: ArrayList<AudioModel>) :
+class AudioAdapter(context: Activity, private val audioArrayList: ArrayList<AudioModel>) :
     RecyclerView.Adapter<AudioAdapter.ViewHolder>() {
 
     val mContext = context
@@ -48,6 +52,15 @@ class AudioAdapter(context: Context, private val audioArrayList: ArrayList<Audio
         holder.itemView.audioDurationId.text = audioDuration
 
         holder.itemView.voicePlayerView.setAudio(audioModel.path)
+
+        holder.itemView.audioLayoutId.setOnClickListener {
+            val intent = Intent(mContext, CombineImages::class.java)
+            intent.putExtra("audio_path", audioModel.path)
+            Log.e("path", audioModel.path)
+//            App.saveString("audio_path", audioModel.path)
+            mContext.startActivity(intent)
+            mContext.finish()
+        }
 
 //        holder.itemView.playAudioButton.setOnClickListener {
 //            createMediaPlayer(
@@ -95,7 +108,7 @@ class AudioAdapter(context: Context, private val audioArrayList: ArrayList<Audio
 //        }.start()
     }
 
-    fun getDate(milliSeconds: Long, dateFormat: String?): String? {
+    private fun getDate(milliSeconds: Long, dateFormat: String?): String? {
         // Create a DateFormatter object for displaying date in specified format.
         val formatter = SimpleDateFormat(dateFormat)
 

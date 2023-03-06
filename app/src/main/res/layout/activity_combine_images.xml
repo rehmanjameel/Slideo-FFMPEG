@@ -30,6 +30,16 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="15dp"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Video"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"/>
+
         <ImageView
             android:id="@+id/cancelVideoId"
             android:layout_width="wrap_content"
@@ -55,23 +65,56 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:surface_type="texture_view"/>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/player"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent">-->
+    <RelativeLayout
+        android:id="@+id/audioPlayerLayoutId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/player">
 
-<!--        <include-->
-<!--            layout="@layout/custom_controller"/>-->
+        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+            android:id="@+id/voicePlayerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:enableVisualizer="true"
+            app:playPauseBackgroundColor="@color/earth_yellow"
+            app:playPauseCornerRadius="100"
+            app:playProgressbarColor="@color/white"
+            app:progressTimeColor="#fff"
+            app:seekBarProgressColor="#fff"
+            app:showShareButton="false"
+            app:showTiming="true"
+            app:viewBackground="@color/black"
+            app:visualizationNotPlayedColor="#c3c3c3"
+            app:visualizationPlayedColor="@color/white"
+            android:layout_alignParentStart="true"/>
 
-<!--    </LinearLayout>-->
+        <ImageView
+            android:id="@+id/cancelAudioMerging"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_outline_cancel_24"
+            android:layout_alignParentEnd="true"
+            android:padding="10dp"
+            />
+
+        <ImageView
+            android:id="@+id/mergeAudioId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_outline_check_circle_24"
+            android:padding="10dp"
+            android:layout_toStartOf="@id/cancelAudioMerging"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/player">
+        app:layout_constraintTop_toBottomOf="@id/audioPlayerLayoutId">
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -84,7 +127,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             app:boxStrokeWidthFocused="1dp"
-            android:layout_marginTop="50dp">
+            android:layout_marginTop="30dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/videoTextET"
@@ -231,6 +274,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
+                android:padding="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_marginEnd="10dp">
 
                 <ImageView
@@ -255,6 +300,8 @@
                 android:orientation="vertical"
                 android:layout_marginStart="10dp"
                 android:gravity="center"
+                android:padding="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_toEndOf="@id/textLayoutId">
 
                 <ImageView

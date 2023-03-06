@@ -124,6 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="tect"
+            android:visibility="gone"
             android:layout_below="@id/linearLayoutId"/>
 
         <Button
@@ -131,7 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Test Audio"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:layout_below="@id/tvInputPathImage"
             android:layout_marginTop="40dp"/>
 

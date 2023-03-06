@@ -34,6 +34,9 @@ class AudioActivity : AppCompatActivity() {
 
         audioRecyclerViewId.adapter = audioAdapter
 
+        backImageId.setOnClickListener {
+            onBackPressed()
+        }
 //        asyncTask.execute(null.toString())
 //        val looper = Looper.getMainLooper()
 //        GlobalScope.launch(Dispatchers.IO) {

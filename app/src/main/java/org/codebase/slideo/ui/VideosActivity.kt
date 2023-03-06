@@ -36,5 +36,9 @@ class VideosActivity : AppCompatActivity() {
         roomDB.saveVideoDao().getAllVideos().observe(this, Observer { list ->
             videoAdapter.setData(list as ArrayList<SaveVideoModel>)
         })
+
+        videoBackIcon.setOnClickListener {
+            onBackPressed()
+        }
     }
 }

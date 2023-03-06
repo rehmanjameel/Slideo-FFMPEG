@@ -11,83 +11,93 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:background="@color/persian_green">
+            android:orientation="vertical"
+            android:background="@color/persian_green"
+            android:padding="10dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/audioThumbNail"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/placeholder" />
-
-            <TextView
-                android:id="@+id/audioNameTextId"
-                android:layout_width="200dp"
+            <RelativeLayout
+                android:id="@+id/audioLayoutId"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Audio Name"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:layout_marginTop="5dp"
-                android:layout_toEndOf="@id/audioThumbNail"
-                android:layout_marginStart="10dp"/>
+                android:background="@color/persian_green">
 
-            <TextView
-                android:id="@+id/audioAlbumId"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/audioNameTextId"
-                android:layout_marginStart="10dp"
-                android:text="album"
-                android:textColor="@color/white"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:layout_toEndOf="@id/audioThumbNail"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/audioThumbNail"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/placeholder" />
 
-            <TextView
-                android:id="@+id/audioDurationId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="duration"
-                android:textColor="@color/white"
-                android:layout_marginTop="10dp"
-                android:layout_alignParentEnd="true"/>
+                <TextView
+                    android:id="@+id/audioNameTextId"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:text="Audio Name"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginTop="5dp"
+                    android:layout_toEndOf="@id/audioThumbNail"
+                    android:layout_marginStart="10dp"/>
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/audioPlayerLayoutId"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@id/audioThumbNail"-->
-<!--                android:orientation="horizontal">-->
+                <TextView
+                    android:id="@+id/audioAlbumId"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/audioNameTextId"
+                    android:layout_marginStart="10dp"
+                    android:text="album"
+                    android:textColor="@color/white"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_toEndOf="@id/audioThumbNail"/>
 
-<!--                <ImageView-->
-<!--                    android:id="@+id/playAudioButton"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:src="@drawable/ic_baseline_play_arrow"/>-->
+                <TextView
+                    android:id="@+id/audioDurationId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="duration"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentEnd="true"/>
 
-<!--                <ImageView-->
-<!--                    android:id="@+id/pauseAudioButton"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:src="@drawable/ic_baseline_pause"-->
-<!--                    android:visibility="gone"/>-->
+                <!--            <LinearLayout-->
+                <!--                android:id="@+id/audioPlayerLayoutId"-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:layout_below="@id/audioThumbNail"-->
+                <!--                android:orientation="horizontal">-->
 
-<!--                <SeekBar-->
-<!--                    android:id="@+id/audio_seek_bar"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:saveEnabled="false"-->
-<!--                    app:unplayed_color="#45424E"-->
-<!--                    app:buffered_color="#95989F"-->
-<!--                    app:played_color="#FFFFFF"-->
-<!--                    app:scrubber_color="#FFFFFF"/>-->
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/playAudioButton"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:src="@drawable/ic_baseline_play_arrow"/>-->
 
-<!--            </LinearLayout>-->
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/pauseAudioButton"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:src="@drawable/ic_baseline_pause"-->
+                <!--                    android:visibility="gone"/>-->
+
+                <!--                <SeekBar-->
+                <!--                    android:id="@+id/audio_seek_bar"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:saveEnabled="false"-->
+                <!--                    app:unplayed_color="#45424E"-->
+                <!--                    app:buffered_color="#95989F"-->
+                <!--                    app:played_color="#FFFFFF"-->
+                <!--                    app:scrubber_color="#FFFFFF"/>-->
+
+                <!--            </LinearLayout>-->
+
+            </RelativeLayout>
+
 
             <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
                 android:id="@+id/voicePlayerView"
@@ -103,10 +113,8 @@
                 app:showTiming="true"
                 app:viewBackground="@color/persian_green"
                 app:visualizationNotPlayedColor="#c3c3c3"
-                app:visualizationPlayedColor="@color/white"
-                android:layout_below="@id/audioThumbNail"/>
-
-        </RelativeLayout>
+                app:visualizationPlayedColor="@color/white"/>
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 

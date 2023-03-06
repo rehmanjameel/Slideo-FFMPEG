@@ -32,6 +32,7 @@ import org.codebase.slideo.db.RoomDB
 import org.codebase.slideo.models.SaveVideoModel
 import org.codebase.slideo.ui.AudioActivity
 import org.codebase.slideo.utils.App
+import kotlin.math.log
 
 class CombineImages : AppCompatActivity() {
 
@@ -42,6 +43,8 @@ class CombineImages : AppCompatActivity() {
     val ffmpegQueryExtension = FFmpegQueryExtension()
     var videoOutPutPath = ""
     lateinit var roomDB: RoomDB
+    private var intentAudioPath: String = ""
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +56,7 @@ class CombineImages : AppCompatActivity() {
 
         videoPath = intent.getStringExtra("video_path").toString()
         Common.loadVideoFromInternalStorage(videoPath)
-        Log.e("vedo path ", videoPath)
+        Log.e("vedo path ", "$videoPath + $intentAudioPath")
         preparePlayer(videoPath)
 //        setFullScreen()
 
@@ -78,7 +81,17 @@ class CombineImages : AppCompatActivity() {
         }
 
         musicImageId.setOnClickListener {
-//            startActivity(Intent(this, AudioActivity::class.java))
+            startActivity(Intent(this, AudioActivity::class.java))
+        }
+
+        intentAudioPath = intent.getStringExtra("audio_path").toString()
+        Log.e("intent path", intentAudioPath)
+        if (intentAudioPath != "null") {
+            processStart()
+            voicePlayerView.visibility = View.VISIBLE
+            voicePlayerView.setAudio(intentAudioPath)
+            preparePlayer(App.getString("video_output_path"))
+            mergeAudioVideo(intentAudioPath)
         }
 
     }
@@ -97,43 +110,6 @@ class CombineImages : AppCompatActivity() {
             seekTo(playbackPosition)
             playWhenReady = playWhenReady
             prepare()
-        }
-    }
-
-    //creating mediaSource
-    private fun buildMediaSource(): MediaSource {
-        // Create a data source factory.
-        val dataSourceFactory: DefaultHttpDataSource.Factory = DefaultHttpDataSource.Factory()
-
-        // Create a progressive media source pointing to a stream uri.
-
-        return ProgressiveMediaSource.Factory(dataSourceFactory)
-            .createMediaSource(MediaItem.fromUri(URL))
-    }
-
-    @SuppressLint("SourceLockedOrientationActivity")
-    private fun setFullScreen() {
-        imageViewFullScreen.setOnClickListener {
-
-            if (!isFullScreen) {
-                imageViewFullScreen.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        applicationContext,
-                        R.drawable.ic_baseline_fullscreen_exit
-                    )
-                )
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-
-            } else {
-                imageViewFullScreen.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        applicationContext,
-                        R.drawable.ic_baseline_fullscreen
-                    )
-                )
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            }
-            isFullScreen = !isFullScreen
         }
     }
 
@@ -196,15 +172,49 @@ class CombineImages : AppCompatActivity() {
             videoTextET.error = "Text is required"
         }
     }
+
+    private fun mergeAudioVideo(intentAudioPath: String) {
+        android.util.Log.e("path", intentAudioPath)
+
+        val outputPath = Common.getInternalPath(this, Common.VIDEO)
+        val query = arrayOf("-i", App.getString("video_output_path"),
+        "-i", intentAudioPath,
+        "-c:v", "copy", "aac", "-map", "0:v:0", "-map", "1:a:0", "-shortest", "-preset", "ultrafast",
+        outputPath)
+//            ffmpegQueryExtension.mergeAudioVideo(App.getString("video_output_path"),
+//            App.getString(intentAudioPath), outputPath)
+
+        CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
+            override fun process(logMessage: LogMessage) {
+//                tvOutputPath.text = logMessage.text
+                Log.e("process mesage", logMessage.text)
+                processStart()
+            }
+
+            override fun success() {
+//                tvOutputPath.text = String.format(getString(R.string.output_path), outputPath)
+                processStop()
+            }
+
+            override fun cancel() {
+                Log.e("process mesage", "canecl")
+
+                processStop()
+            }
+
+            override fun failed() {
+                Log.e("process mesage", "failed")
+                processStop()
+            }
+
+        })
+    }
+
     private fun processStop() {
-//        btnVideoPath.isEnabled = true
-//        btnAdd.isEnabled = true
         mProgressView.visibility = View.GONE
     }
 
     private fun processStart() {
-//        btnVideoPath.isEnabled = false
-//        btnAdd.isEnabled = false
         mProgressView.visibility = View.VISIBLE
     }
 
@@ -265,6 +275,43 @@ class CombineImages : AppCompatActivity() {
 
         // show it
         alertDialog.show()
+    }
+
+    //creating mediaSource
+    private fun buildMediaSource(): MediaSource {
+        // Create a data source factory.
+        val dataSourceFactory: DefaultHttpDataSource.Factory = DefaultHttpDataSource.Factory()
+
+        // Create a progressive media source pointing to a stream uri.
+
+        return ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(URL))
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    private fun setFullScreen() {
+        imageViewFullScreen.setOnClickListener {
+
+            if (!isFullScreen) {
+                imageViewFullScreen.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        applicationContext,
+                        R.drawable.ic_baseline_fullscreen_exit
+                    )
+                )
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+
+            } else {
+                imageViewFullScreen.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        applicationContext,
+                        R.drawable.ic_baseline_fullscreen
+                    )
+                )
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
+            isFullScreen = !isFullScreen
+        }
     }
 
     companion object {

@@ -84,21 +84,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
         }
 
-        buttonAudioId.visibility = View.VISIBLE
-        buttonAudioId.setOnClickListener {
-            startActivity(Intent(this, AudioActivity::class.java))
-        }
+//        buttonAudioId.visibility = View.VISIBLE
+//        buttonAudioId.setOnClickListener {
+//            startActivity(Intent(this, CombineImages::class.java))
+//        }
 
     }
-
-//    fun replaceFragment(fragment: Fragment) {
-//        val fragmentManager = supportFragmentManager
-//        val fragmentTransaction = fragmentManager.beginTransaction()
-//        fragmentTransaction.replace(R.id.frame_content, fragment)
-//        fragmentTransaction.addToBackStack(fragment.toString())
-//        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//        fragmentTransaction.commit()
-//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
