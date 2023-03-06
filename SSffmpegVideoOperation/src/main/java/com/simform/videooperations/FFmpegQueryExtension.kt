@@ -1,5 +1,7 @@
 package com.simform.videooperations
 
+import android.util.Log
+
 /**
  * Created by Ashvin Vavaliya on 10,December,2020
  * Simform Solutions Pvt Ltd.
@@ -86,13 +88,14 @@ public class FFmpegQueryExtension {
         if (isTextBackgroundDisplay) {
             borderQuery = ":box=1:boxcolor=black@0.5:boxborderw=5"
         }
+        Log.e("test text is here", "$startTime,,.,.$endTime")
         inputs.apply {
             add("-i")
             add(inputVideo)
             add("-vf")
             add("drawtext=text='$textInput':fontfile=$fontPath:x=$posX:y=$posY:fontsize=$fontSize:fontcolor=$fontcolor${borderQuery.trim()}:enable='between(t,$startTime,$endTime)")
-            add("-vcodec")
-            add("mpeg4")
+//            add("-vcodec")
+//            add("mpeg4")
             add("-c:a")
             add("copy")
             add("-b:v")

@@ -107,5 +107,8 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
 
+    //Voice player
+    implementation 'com.github.JagarYousef:ChatVoicePlayer:1.1.0'
+
     implementation project(':SSffmpegVideoOperation')
 }

@@ -56,39 +56,44 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        >
+        android:layout_alignParentBottom="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="8dp"
             android:gravity="center">
+
             <TextView
                 android:id="@+id/exo_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="/"
                 android:textColor="#CBCDC8"
                 android:layout_marginEnd="4dp"/>
+
             <TextView
                 android:id="@+id/exo_duration"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="#CBCDC8"/>
+
             <ImageView
                 android:id="@+id/imageViewFullScreen"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/exo_controls_fullscreen_enter"
-                android:theme="@style/ClickableView"
-                />
+                android:theme="@style/ClickableView" />
+
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,8 +104,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_play_arrow"
-                android:theme="@style/ClickableView"
-                />
+                android:theme="@style/ClickableView" />
+
             <ImageView
                 android:id="@+id/exo_pause"
                 android:layout_width="wrap_content"
@@ -118,8 +123,7 @@
                 app:unplayed_color="#45424E"
                 app:buffered_color="#95989F"
                 app:played_color="#FFFFFF"
-                app:scrubber_color="#FFFFFF"
-                />
+                app:scrubber_color="#FFFFFF" />
 
         </LinearLayout>
 

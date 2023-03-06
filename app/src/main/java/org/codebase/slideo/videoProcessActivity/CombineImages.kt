@@ -60,8 +60,8 @@ class CombineImages : AppCompatActivity() {
         imageViewFullScreen.visibility = View.GONE
 
         textLayoutId.setOnClickListener {
-            alertDialogDemo()
-//            addTextProcess()
+//            alertDialogDemo()
+            getText()
         }
 
         roomDB = RoomDB.getDataBase(this)
@@ -76,9 +76,11 @@ class CombineImages : AppCompatActivity() {
         cancelVideoId.setOnClickListener {
             onBackPressed()
         }
+
         musicImageId.setOnClickListener {
 //            startActivity(Intent(this, AudioActivity::class.java))
         }
+
     }
 
     private fun preparePlayer(videoPath: String) {
@@ -144,14 +146,17 @@ class CombineImages : AppCompatActivity() {
 //            (edtYPos.text.toString().toFloat().times(it)).div(100)
 //        }
         val fontPath = Common.getFileFromAssets(this, "little_lord.ttf").absolutePath
+        android.util.Log.e("test text is here5454", "$startTime,,.,.$endTime")
+
         val query = ffmpegQueryExtension.addTextOnVideo(
             App.getString("video_output_path"),
             textInput, 200f, 1000f,
             fontPath = fontPath, isTextBackgroundDisplay = true,
-            fontSize = 50, fontcolor = "red", output = videoOutPutPath, startTime, endTime)
+            fontSize = 70, fontcolor = "red", output = videoOutPutPath, startTime, endTime)
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
             override fun process(logMessage: LogMessage) {
 //                tvOutputPath.text = logMessage.text
+                processStart()
             }
 
             override fun success() {
@@ -174,6 +179,23 @@ class CombineImages : AppCompatActivity() {
         })
     }
 
+    private fun getText() {
+        val videoText = videoTextET.text.toString()
+        val videoTextStartTime = videoTextStartTimeET.text.toString()
+        val videoTextEndTime = videoTextEndTimeET.text.toString()
+
+        if (videoText.isNotEmpty()) {
+            addTextProcess(textInput = videoText, startTime = videoTextStartTime, endTime = videoTextEndTime)
+            videoTextET.setText("")
+            videoTextStartTimeET.setText("")
+            videoTextEndTimeET.setText("")
+            videoTextET.isFocusable = false
+            videoTextStartTimeET.isFocusable = false
+            videoTextEndTimeET.isFocusable = false
+        } else {
+            videoTextET.error = "Text is required"
+        }
+    }
     private fun processStop() {
 //        btnVideoPath.isEnabled = true
 //        btnAdd.isEnabled = true
@@ -233,7 +255,7 @@ class CombineImages : AppCompatActivity() {
                 ).show()
                 processStart()
 
-                addTextProcess(userInput.text.toString(), startTime.text.toString(), endTime.text.toString())
+//                addTextProcess(userInput.text.toString(), startTime.text.toString(), endTime.text.toString())
             }
             .setNegativeButton("Cancel"
             ) { dialog, id -> dialog.cancel() }

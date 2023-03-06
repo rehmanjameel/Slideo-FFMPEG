@@ -17,9 +17,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
@@ -28,9 +25,7 @@ import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.codebase.slideo.ui.AudioActivity
 import org.codebase.slideo.ui.VideosActivity
-import org.codebase.slideo.ui.VideosLibraryFragment
 import org.codebase.slideo.utils.App
-import org.codebase.slideo.utils.AsyncTaskResolver
 import org.codebase.slideo.videoProcessActivity.CombineImages
 import org.codebase.slideo.viewmodel.SplashScreenViewModel
 import java.io.*
@@ -41,7 +36,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     var mediaFiles: List<MediaFile>? = null
     private var isImageSelected: Boolean = false
-    val ffmpegQueryExtension = FFmpegQueryExtension()
+    private val ffmpegQueryExtension = FFmpegQueryExtension()
 
     private val splashViewModel = SplashScreenViewModel()
 
@@ -175,7 +170,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 pathsList.add(paths)
             }
 
-            val query = ffmpegQueryExtension.combineImagesAndVideos(pathsList, 1280, 720,
+            val query = ffmpegQueryExtension.combineImagesAndVideos(pathsList, 720, 1080,
                 3.toString(), outputPath)
 
             CallBackOfQuery().callQuery(query, object : FFmpegCallBack {

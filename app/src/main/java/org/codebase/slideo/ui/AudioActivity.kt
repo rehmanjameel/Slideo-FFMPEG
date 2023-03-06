@@ -1,19 +1,16 @@
 package org.codebase.slideo.ui
 
-import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_audio.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import org.codebase.slideo.R
 import org.codebase.slideo.adapters.AudioAdapter
 import org.codebase.slideo.models.AudioModel
-import org.codebase.slideo.utils.AsyncTaskResolver
 import java.io.File
 
 class AudioActivity : AppCompatActivity() {

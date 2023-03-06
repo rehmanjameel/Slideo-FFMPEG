@@ -21,4 +21,7 @@
     <color name="burnt_sienna">#E76F51</color>
     <color name="charcoal">#264653</color>
     <color name="persian_green">#2A9D8F</color>
+
+    <color name="button_background">#826AF9</color>
+    <color name="msg_bg_left">#F4F1FF</color>
 </resources>

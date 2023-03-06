@@ -19,7 +19,6 @@
         android:id="@+id/confirmButtonLayoutId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/persian_green"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -74,54 +73,131 @@
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/player">
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Type Your Text : "
-            android:textColor="@color/white"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_gravity="center"/>
-
-        <EditText
-            android:id="@+id/etUserInput"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
+            app:boxStrokeWidth="2dp"
+            app:hintTextColor="@color/tigers_eye"
+            android:textColorHint="@color/lite_color"
+            app:boxStrokeColor="@color/text_input_layout"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:boxStrokeWidthFocused="1dp"
+            android:layout_marginTop="50dp">
 
-            <requestFocus />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/videoTextET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:cursorVisible="true"
+                android:maxLines="3"
+                android:textCursorDrawable="@drawable/edit_text_cursor"
+                android:hint="Enter text here"/>
 
-        </EditText>
+        </com.google.android.material.textfield.TextInputLayout>
+<!--        <EditText-->
+<!--            android:id="@+id/etUserInput"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:textColorHint="@color/lite_color"-->
+<!--            android:hint="Enter Text here"-->
+<!--            android:backgroundTint="@null"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textCursorDrawable="@drawable/edit_text_cursor"-->
+<!--            android:background="@drawable/edit_text_background"-->
+<!--            />-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2"
-            android:background="@color/white"
             android:layout_margin="10dp">
 
-            <EditText
-                android:id="@+id/etStartTime"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                app:boxStrokeWidth="2dp"
                 android:layout_weight="1"
-                android:hint="Start Time"
-                android:layout_marginEnd="5dp">
+                app:hintTextColor="@color/tigers_eye"
+                android:textColorHint="@color/lite_color"
+                app:boxStrokeColor="@color/text_input_layout"
+                app:boxStrokeWidthFocused="1dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="10dp">
 
-            </EditText>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/videoTextStartTimeET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:cursorVisible="true"
+                    android:maxLines="1"
+                    android:inputType="number"
+                    android:textCursorDrawable="@drawable/edit_text_cursor"
+                    android:hint="Enter text here"/>
 
-            <EditText
-                android:id="@+id/etEndTime"
-                android:layout_width="wrap_content"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                app:boxStrokeWidth="2dp"
                 android:layout_weight="1"
-                android:hint="End time"
-                android:layout_marginStart="5dp">
+                app:hintTextColor="@color/tigers_eye"
+                android:textColorHint="@color/lite_color"
+                app:boxStrokeColor="@color/text_input_layout"
+                app:boxStrokeWidthFocused="1dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp">
 
-            </EditText>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/videoTextEndTimeET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:cursorVisible="true"
+                    android:maxLines="1"
+                    android:inputType="number"
+                    android:textCursorDrawable="@drawable/edit_text_cursor"
+                    android:hint="End time"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+<!--            <EditText-->
+<!--                android:id="@+id/etStartTime"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@drawable/edit_text_background"-->
+<!--                android:textCursorDrawable="@drawable/edit_text_cursor"-->
+<!--                android:hint="Start Time"-->
+<!--                android:textColorHint="@color/lite_color"-->
+<!--                android:textColor="@color/white"-->
+
+<!--                android:layout_marginEnd="5dp"/>-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/etEndTime"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:hint="End time"-->
+<!--                android:backgroundTint="@null"-->
+<!--                android:layout_marginStart="5dp"-->
+<!--                android:background="@drawable/edit_text_background"-->
+<!--                android:textCursorDrawable="@drawable/edit_text_cursor"-->
+<!--                android:textColorHint="@color/lite_color"-->
+<!--                android:textColor="@color/white"/>-->
 
         </LinearLayout>
 
