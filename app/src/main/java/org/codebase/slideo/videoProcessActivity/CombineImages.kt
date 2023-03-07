@@ -87,11 +87,13 @@ class CombineImages : AppCompatActivity() {
         intentAudioPath = intent.getStringExtra("audio_path").toString()
         Log.e("intent path", intentAudioPath)
         if (intentAudioPath != "null") {
-            processStart()
             audioPlayerLayoutId.visibility = View.VISIBLE
-            voicePlayerView.setAudio(intentAudioPath)
-            preparePlayer(App.getString("video_output_path"))
-            mergeAudioVideo(intentAudioPath)
+            mergeAudioId.setOnClickListener {
+                processStart()
+                voicePlayerView.setAudio(intentAudioPath)
+                preparePlayer(App.getString("video_output_path"))
+                mergeAudioVideo(intentAudioPath)
+            }
         } else {
             audioPlayerLayoutId.visibility = View.GONE
         }
@@ -151,9 +153,9 @@ class CombineImages : AppCompatActivity() {
                 Log.e("process mesage success", "isSuccess???? $videoOutPutPath")
 
                 App.saveString("video_output_path", videoOutPutPath)
-                videoTextET.isFocusable = true
-                videoTextStartTimeET.isFocusable = true
-                videoTextEndTimeET.isFocusable = true
+//                videoTextET.isFocusable = true
+//                videoTextStartTimeET.isFocusable = true
+//                videoTextEndTimeET.isFocusable = true
                 processStop()
             }
 
@@ -177,9 +179,9 @@ class CombineImages : AppCompatActivity() {
             videoTextET.setText("")
             videoTextStartTimeET.setText("")
             videoTextEndTimeET.setText("")
-            videoTextET.isFocusable = false
-            videoTextStartTimeET.isFocusable = false
-            videoTextEndTimeET.isFocusable = false
+//            videoTextET.isFocusable = false
+//            videoTextStartTimeET.isFocusable = false
+//            videoTextEndTimeET.isFocusable = false
         } else {
             videoTextET.error = "Text is required"
         }

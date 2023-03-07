@@ -77,7 +77,7 @@
 
         <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
             android:id="@+id/voicePlayerView"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             app:enableVisualizer="true"
             app:playPauseBackgroundColor="@color/earth_yellow"
@@ -107,6 +107,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_outline_check_circle_24"
             android:padding="10dp"
+            android:layout_toEndOf="@id/voicePlayerView"
             android:layout_toStartOf="@id/cancelAudioMerging"/>
     </RelativeLayout>
 
