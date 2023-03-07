@@ -88,10 +88,17 @@ class CombineImages : AppCompatActivity() {
         Log.e("intent path", intentAudioPath)
         if (intentAudioPath != "null") {
             processStart()
-            voicePlayerView.visibility = View.VISIBLE
+            audioPlayerLayoutId.visibility = View.VISIBLE
             voicePlayerView.setAudio(intentAudioPath)
             preparePlayer(App.getString("video_output_path"))
             mergeAudioVideo(intentAudioPath)
+        } else {
+            audioPlayerLayoutId.visibility = View.GONE
+        }
+
+        cancelAudioMerging.setOnClickListener {
+            audioPlayerLayoutId.visibility = View.GONE
+            voicePlayerView.onStop()
         }
 
     }
@@ -141,7 +148,12 @@ class CombineImages : AppCompatActivity() {
                     exoPlayer?.clearVideoSurface()
                 }
                 preparePlayer(videoOutPutPath)
+                Log.e("process mesage success", "isSuccess???? $videoOutPutPath")
+
                 App.saveString("video_output_path", videoOutPutPath)
+                videoTextET.isFocusable = true
+                videoTextStartTimeET.isFocusable = true
+                videoTextEndTimeET.isFocusable = true
                 processStop()
             }
 
@@ -176,13 +188,12 @@ class CombineImages : AppCompatActivity() {
     private fun mergeAudioVideo(intentAudioPath: String) {
         android.util.Log.e("path", intentAudioPath)
 
-        val outputPath = Common.getInternalPath(this, Common.VIDEO)
-        val query = arrayOf("-i", App.getString("video_output_path"),
-        "-i", intentAudioPath,
-        "-c:v", "copy", "aac", "-map", "0:v:0", "-map", "1:a:0", "-shortest", "-preset", "ultrafast",
-        outputPath)
-//            ffmpegQueryExtension.mergeAudioVideo(App.getString("video_output_path"),
-//            App.getString(intentAudioPath), outputPath)
+        videoOutPutPath = Common.getInternalPath(this, Common.VIDEO)
+        val query = ffmpegQueryExtension.mergeAudioVideo(App.getString("video_output_path"),
+            intentAudioPath, videoOutPutPath)
+//            arrayOf("-i", App.getString("video_output_path"), "-i", intentAudioPath,
+//            "-c:v", "copy", "-c:a", "aac", "-strict", "experimental", "-map",
+//            "0:v:0", "-map", "1:a:0", "-shortest", outputPath)
 
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
             override fun process(logMessage: LogMessage) {
@@ -193,6 +204,9 @@ class CombineImages : AppCompatActivity() {
 
             override fun success() {
 //                tvOutputPath.text = String.format(getString(R.string.output_path), outputPath)
+                Log.e("process mesage success", "isSuccess???? $videoOutPutPath")
+                preparePlayer(videoOutPutPath)
+                App.saveString("video_output_path", videoOutPutPath)
                 processStop()
             }
 

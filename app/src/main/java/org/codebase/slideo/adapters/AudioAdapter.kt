@@ -16,7 +16,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.SeekBar
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_combine_images.view.*
 import kotlinx.android.synthetic.main.audio_items.view.*
+import kotlinx.android.synthetic.main.audio_items.view.voicePlayerView
 import org.codebase.slideo.R
 import org.codebase.slideo.models.AudioModel
 import org.codebase.slideo.utils.App
@@ -118,6 +120,17 @@ class AudioAdapter(context: Activity, private val audioArrayList: ArrayList<Audi
         return formatter.format(calendar.time)
     }
 
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        recyclerView.voicePlayerView.onPause()
+        recyclerView.voicePlayerView.onStop()
+    }
+
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.itemView.voicePlayerView.onPause()
+        holder.itemView.voicePlayerView.onStop()
+    }
     override fun getItemCount(): Int {
         return audioArrayList.size
     }
