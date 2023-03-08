@@ -185,7 +185,7 @@
                     android:maxLines="1"
                     android:inputType="number"
                     android:textCursorDrawable="@drawable/edit_text_cursor"
-                    android:hint="Enter text here"/>
+                    android:hint="Start Time"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 

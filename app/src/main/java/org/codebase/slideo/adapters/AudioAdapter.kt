@@ -15,12 +15,13 @@ import android.widget.AbsSeekBar
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_combine_images.view.*
 import kotlinx.android.synthetic.main.audio_items.view.*
-import kotlinx.android.synthetic.main.audio_items.view.voicePlayerView
 import org.codebase.slideo.R
 import org.codebase.slideo.models.AudioModel
+import org.codebase.slideo.ui.AudioActivity
 import org.codebase.slideo.utils.App
 import org.codebase.slideo.videoProcessActivity.CombineImages
 import java.text.SimpleDateFormat
@@ -53,15 +54,17 @@ class AudioAdapter(context: Activity, private val audioArrayList: ArrayList<Audi
         holder.itemView.audioAlbumId.text = audioModel.album
         holder.itemView.audioDurationId.text = audioDuration
 
-        holder.itemView.voicePlayerView.setAudio(audioModel.path)
+        holder.itemView.playAudioId.setOnClickListener {
+            audioModel = audioArrayList[holder.absoluteAdapterPosition]
+//            Log.e("path", audioModel.path)
+            (mContext as AudioActivity).playVoice(audioModel.path, audioModel.title)
+        }
 
-        holder.itemView.audioLayoutId.setOnClickListener {
-            val intent = Intent(mContext, CombineImages::class.java)
-            intent.putExtra("audio_path", audioModel.path)
-            Log.e("path", audioModel.path)
-//            App.saveString("audio_path", audioModel.path)
-            mContext.startActivity(intent)
-            mContext.finish()
+        holder.itemView.selectVoiceId.setOnClickListener {
+            audioModel = audioArrayList[holder.absoluteAdapterPosition]
+            App.saveString("audio_path", audioModel.path)
+            Toast.makeText(mContext, audioModel.path, Toast.LENGTH_LONG).show()
+            mContext.onBackPressed()
         }
 
 //        holder.itemView.playAudioButton.setOnClickListener {
@@ -95,7 +98,7 @@ class AudioAdapter(context: Activity, private val audioArrayList: ArrayList<Audi
 //        val imagePath = audioModel.imagePath
 //        val imagePathUri = Uri.parse(imagePath)
 
-        Log.e("audios", audioModel.path)
+//        Log.e("audios", audioModel.path)
 //        holder.itemView.audioNameTextId.text = audioModel.name
 
 //        Thread {
@@ -120,17 +123,6 @@ class AudioAdapter(context: Activity, private val audioArrayList: ArrayList<Audi
         return formatter.format(calendar.time)
     }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        recyclerView.voicePlayerView.onPause()
-        recyclerView.voicePlayerView.onStop()
-    }
-
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        holder.itemView.voicePlayerView.onPause()
-        holder.itemView.voicePlayerView.onStop()
-    }
     override fun getItemCount(): Int {
         return audioArrayList.size
     }

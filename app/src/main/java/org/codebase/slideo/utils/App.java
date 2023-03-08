@@ -72,6 +72,11 @@ public class App extends Application {
         sharedPreferences.edit().clear().apply();
     }
 
+    public static void removeKey(String key) {
+        SharedPreferences sharedPreferences = getPreferenceManager();
+        sharedPreferences.edit().remove(key).apply();
+    }
+
     private void createNotificationChannnel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(

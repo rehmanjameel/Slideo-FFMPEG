@@ -77,6 +77,7 @@ class CombineImages : AppCompatActivity() {
         }
 
         cancelVideoId.setOnClickListener {
+            App.removeKey("audio_path")
             onBackPressed()
         }
 
@@ -84,22 +85,9 @@ class CombineImages : AppCompatActivity() {
             startActivity(Intent(this, AudioActivity::class.java))
         }
 
-        intentAudioPath = intent.getStringExtra("audio_path").toString()
-        Log.e("intent path", intentAudioPath)
-        if (intentAudioPath != "null") {
-            audioPlayerLayoutId.visibility = View.VISIBLE
-            mergeAudioId.setOnClickListener {
-                processStart()
-                voicePlayerView.setAudio(intentAudioPath)
-                preparePlayer(App.getString("video_output_path"))
-                mergeAudioVideo(intentAudioPath)
-            }
-        } else {
-            audioPlayerLayoutId.visibility = View.GONE
-        }
-
         cancelAudioMerging.setOnClickListener {
             audioPlayerLayoutId.visibility = View.GONE
+            App.removeKey("audio_path")
             voicePlayerView.onStop()
         }
 
@@ -234,6 +222,24 @@ class CombineImages : AppCompatActivity() {
         mProgressView.visibility = View.VISIBLE
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        intentAudioPath = App.getString("audio_path")
+        Log.e("intent path", intentAudioPath)
+        if (intentAudioPath.isNotEmpty()) {
+            audioPlayerLayoutId.visibility = View.VISIBLE
+            voicePlayerView.setAudio(intentAudioPath)
+            preparePlayer(App.getString("video_output_path"))
+            mergeAudioId.setOnClickListener {
+                processStart()
+                mergeAudioVideo(intentAudioPath)
+            }
+        } else {
+            audioPlayerLayoutId.visibility = View.GONE
+        }
+
+    }
     override fun onStop() {
         super.onStop()
         exoPlayer?.stop()
@@ -242,10 +248,15 @@ class CombineImages : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         exoPlayer?.release()
+        App.removeKey("audio_path")
+
     }
 
     override fun onPause() {
         super.onPause()
+
+        App.removeKey("audio_path")
+
         exoPlayer?.pause()
     }
 
@@ -254,6 +265,7 @@ class CombineImages : AppCompatActivity() {
         if (isLock) return
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             imageViewFullScreen.performClick()
+            App.removeKey("audio_path")
         } else super.onBackPressed()
     }
 

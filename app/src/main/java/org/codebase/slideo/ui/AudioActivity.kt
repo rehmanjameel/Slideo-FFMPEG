@@ -5,8 +5,10 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_audio.*
+import kotlinx.android.synthetic.main.activity_combine_images.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import org.codebase.slideo.R
 import org.codebase.slideo.adapters.AudioAdapter
@@ -36,6 +38,11 @@ class AudioActivity : AppCompatActivity() {
 
         backImageId.setOnClickListener {
             onBackPressed()
+        }
+
+        stopVoiceId.setOnClickListener {
+            voicePlayerViewId.onStop()
+            voicePlayerLayout.visibility = View.GONE
         }
 //        asyncTask.execute(null.toString())
 //        val looper = Looper.getMainLooper()
@@ -90,6 +97,18 @@ class AudioActivity : AppCompatActivity() {
         }
 
         return tempAudioList
+    }
+
+    fun playVoice(voicePath: String, title: String) {
+        voicePlayerLayout.visibility = View.VISIBLE
+        voiceTitleId.text = title
+        voicePlayerViewId.refreshPlayer(voicePath)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        voicePlayerLayout.visibility = View.GONE
+        voicePlayerViewId.onStop()
     }
 
 //    val asyncTask = object : AsyncTaskResolver<String, Boolean, Boolean>() {
