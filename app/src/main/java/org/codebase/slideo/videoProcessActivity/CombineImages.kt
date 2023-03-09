@@ -179,11 +179,12 @@ class CombineImages : AppCompatActivity() {
         android.util.Log.e("path", intentAudioPath)
 
         videoOutPutPath = Common.getInternalPath(this, Common.VIDEO)
-        val query = ffmpegQueryExtension.mergeAudioVideo(App.getString("video_output_path"),
+        val query =
+            ffmpegQueryExtension.mergeAudioVideo(App.getString("video_output_path"),
             intentAudioPath, videoOutPutPath)
 //            arrayOf("-i", App.getString("video_output_path"), "-i", intentAudioPath,
 //            "-c:v", "copy", "-c:a", "aac", "-strict", "experimental", "-map",
-//            "0:v:0", "-map", "1:a:0", "-shortest", outputPath)
+//            "0:v:0", "-map", "1:a:0", "-shortest", videoOutPutPath)
 
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
             override fun process(logMessage: LogMessage) {
