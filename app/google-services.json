@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "352525895559",
+    "project_id": "slideo-53367",
+    "storage_bucket": "slideo-53367.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352525895559:android:e81750390cc8c578b1f522",
+        "android_client_info": {
+          "package_name": "org.codebase.slideo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "352525895559-i3058n71dpdjq9ncvvcsn0s4qhn29ge9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.codebase.slideo",
+            "certificate_hash": "77dbf7ce1ffa5c0b71cbb73355f56d913548e413"
+          }
+        },
+        {
+          "client_id": "352525895559-v7vd0rl79me2ihk7cb84dio4us6v890n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnzafAs23kCgoaaCTYF1PlsIRru3Po4Mk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "352525895559-v7vd0rl79me2ihk7cb84dio4us6v890n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
