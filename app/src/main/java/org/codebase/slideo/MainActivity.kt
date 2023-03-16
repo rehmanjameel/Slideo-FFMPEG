@@ -24,6 +24,7 @@ import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.codebase.slideo.ui.AudioActivity
+import org.codebase.slideo.ui.LoginActivity
 import org.codebase.slideo.ui.VideosActivity
 import org.codebase.slideo.utils.App
 import org.codebase.slideo.videoProcessActivity.CombineImages
@@ -126,11 +127,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.createVideoId) {
-            Toast.makeText(this, "Create your videos here", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, CombineImages::class.java)
+            startActivity(intent)
         } else if (item.itemId == R.id.myVideosId) {
-            Toast.makeText(this, "Your saved videos are here", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, VideosActivity::class.java)
+            startActivity(intent)
         } else if (item.itemId == R.id.loginId) {
-            Toast.makeText(this, "Login to account", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         } else if (item.itemId == R.id.nav_logout) {
             Toast.makeText(this, "You are logged out", Toast.LENGTH_SHORT).show()
         }

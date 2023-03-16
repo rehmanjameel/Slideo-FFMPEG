@@ -54,12 +54,28 @@
                 android:padding="10dp"
                 android:layout_marginTop="5dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@mipmap/ic_launcher"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="10dp"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/userSignUpImage"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@mipmap/ic_launcher"
+                        android:layout_centerInParent="true"
+                        android:layout_marginBottom="10dp"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_toEndOf="@id/userSignUpImage"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="-30dp"
+                        android:src="@drawable/ic_baseline_photo_camera_24"
+                        android:background="#c6c6c6"/>
+                </RelativeLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -74,6 +90,7 @@
                     >
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/signUpUserName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="User Name"/>
@@ -93,6 +110,7 @@
                     android:layout_marginTop="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/signUpEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Email"/>
@@ -112,6 +130,7 @@
                     android:layout_marginTop="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/signUpPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Password"/>
@@ -131,6 +150,7 @@
                     android:layout_marginTop="5dp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/signUpConfirmPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Confirm Password"/>
@@ -138,6 +158,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RadioGroup
+                    android:id="@+id/genderRadioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -145,20 +166,24 @@
                     android:gravity="center">
 
                     <RadioButton
+                        android:id="@+id/genderMale"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Male"
                         android:checked="true"/>
 
                     <RadioButton
+                        android:id="@+id/genderFeMale"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Female"/>
 
                     <RadioButton
+                        android:id="@+id/genderOther"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Other"/>
+
                 </RadioGroup>
 
                 <com.google.android.material.button.MaterialButton
