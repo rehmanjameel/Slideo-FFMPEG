@@ -24,4 +24,8 @@
 
     <color name="button_background">#826AF9</color>
     <color name="msg_bg_left">#F4F1FF</color>
+    <color name="transparent">#00000000</color>
+    <color name="top_bar">#068251</color>
+
+
 </resources>

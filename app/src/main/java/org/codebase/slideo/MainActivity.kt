@@ -132,11 +132,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else if (item.itemId == R.id.myVideosId) {
             val intent = Intent(this, VideosActivity::class.java)
             startActivity(intent)
-        } else if (item.itemId == R.id.loginId) {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-        } else if (item.itemId == R.id.nav_logout) {
-            Toast.makeText(this, "You are logged out", Toast.LENGTH_SHORT).show()
+        }
+//        else if (item.itemId == R.id.loginId) {
+//            val intent = Intent(this, LoginActivity::class.java)
+//            startActivity(intent)
+//        }
+//        else if (item.itemId == R.id.nav_logout) {
+//            Toast.makeText(this, "You are logged out", Toast.LENGTH_SHORT).show()
+//        }
+        else if (item.itemId == R.id.profileId) {
+            if (!App.isLoggedIn()) {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
+            }
         }
 
         return true
@@ -154,7 +164,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mProgressView.visibility = View.VISIBLE
     }
 
-    fun combineImagesProcess() {
+    private fun combineImagesProcess() {
         val outputPath = Common.getInternalPath(this, Common.VIDEO)
         val pathsList = ArrayList<Paths>()
         mediaFiles?.let {

@@ -16,21 +16,33 @@
         android:src="@drawable/top_background"/>
 
     <TextView
+        android:id="@+id/signupTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SignUp"
         android:textColor="@color/white"
         android:textSize="40sp"
-        android:layout_margin="30dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@id/backArrow"
         app:layout_constraintTop_toTopOf="parent"
         android:textStyle="bold"/>
 
+    <ImageView
+        android:id="@+id/backArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_keyboard_backspace_24"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="10dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_marginTop="35dp"/>
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -67,13 +79,14 @@
                         android:layout_marginBottom="10dp"/>
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:id="@+id/selectImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_toEndOf="@id/userSignUpImage"
                         android:layout_alignParentBottom="true"
                         android:layout_marginStart="-30dp"
-                        android:src="@drawable/ic_baseline_photo_camera_24"
+                        android:src="@drawable/ic_outline_photo_camera_24"
                         android:background="#c6c6c6"/>
                 </RelativeLayout>
 
@@ -187,7 +200,7 @@
                 </RadioGroup>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/loginButtonId"
+                    android:id="@+id/signUpButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Signup"
@@ -200,10 +213,41 @@
                     app:strokeColor="@color/persian_green"
                     android:layout_marginTop="20dp"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Already have an account?"/>
+
+                    <TextView
+                        android:id="@+id/openLoginPage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Login"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:textColor="@color/purple_500"
+                        android:layout_marginStart="10dp"/>
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
     </ScrollView>
+
+    <include
+        android:id="@+id/mProgressView"
+        layout="@layout/progress_view"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

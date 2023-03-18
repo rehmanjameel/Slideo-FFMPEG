@@ -20,10 +20,10 @@
                     android:iconTint="@color/black"
                     android:title="My Videos" />
 
-                <item
-                    android:id="@+id/loginId"
-                    android:title="Login"
-                    android:icon="@drawable/ic_baseline_login"/>
+<!--                <item-->
+<!--                    android:id="@+id/loginId"-->
+<!--                    android:title="Login"-->
+<!--                    android:icon="@drawable/ic_baseline_login"/>-->
 
                 <item
                     android:id="@+id/profileId"
@@ -34,17 +34,17 @@
 
     </group>
 
-    <group
-        android:checkableBehavior="none">
-        <item
-            android:title="">
-            <menu>
-                <item
-                    android:id="@+id/nav_logout"
-                    android:title="Logout"
-                    android:icon="@drawable/ic_baseline_logout"/>
-            </menu>
-        </item>
-    </group>
+<!--    <group-->
+<!--        android:checkableBehavior="none">-->
+<!--        <item-->
+<!--            android:title="">-->
+<!--            <menu>-->
+<!--                <item-->
+<!--                    android:id="@+id/nav_logout"-->
+<!--                    android:title="Logout"-->
+<!--                    android:icon="@drawable/ic_baseline_logout"/>-->
+<!--            </menu>-->
+<!--        </item>-->
+<!--    </group>-->
 
 </menu>
