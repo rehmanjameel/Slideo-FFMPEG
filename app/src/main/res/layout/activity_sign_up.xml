@@ -7,6 +7,7 @@
     tools:context=".ui.SignUpActivity">
 
     <ImageView
+        android:id="@+id/titleImage"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -15,35 +16,49 @@
         android:scaleType="fitXY"
         android:src="@drawable/top_background"/>
 
-    <TextView
-        android:id="@+id/signupTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SignUp"
-        android:textColor="@color/white"
-        android:textSize="40sp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@id/backArrow"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textStyle="bold"/>
 
-    <ImageView
-        android:id="@+id/backArrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_keyboard_backspace_24"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:padding="10dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:layout_marginTop="35dp"/>
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/titleLayoutId"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp">
+
+        <TextView
+            android:id="@+id/signupTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SignUp"
+            android:textColor="@color/white"
+            android:textSize="40sp"
+            android:translationZ="1dp"
+
+            android:layout_toEndOf="@id/backArrow"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:id="@+id/backArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_keyboard_backspace_24"
+            android:padding="10dp"
+            android:layout_alignParentStart="true"
+            android:translationZ="1dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_marginTop="5dp"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleLayoutId"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.cardview.widget.CardView
@@ -54,7 +69,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:cardCornerRadius="20dp"
             android:layout_margin="10dp"
-            android:layout_gravity="bottom"
+            android:layout_gravity="center"
             android:elevation="8dp"
             app:cardMaxElevation="20sp"
             app:layout_constraintEnd_toEndOf="parent">
@@ -63,8 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="10dp"
-                android:layout_marginTop="5dp">
+                android:padding="10dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -80,14 +94,15 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/selectImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:layout_toEndOf="@id/userSignUpImage"
                         android:layout_alignParentBottom="true"
                         android:layout_marginStart="-30dp"
                         android:src="@drawable/ic_outline_photo_camera_24"
-                        android:background="#c6c6c6"/>
+                        app:civ_circle_background_color="#c6c6c6"
+                        android:tint="@color/white"/>
                 </RelativeLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -106,7 +121,9 @@
                         android:id="@+id/signUpUserName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="User Name"/>
+                        android:hint="User Name"
+                        android:inputType="text"
+                        android:maxLines="1"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -126,7 +143,9 @@
                         android:id="@+id/signUpEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Email"/>
+                        android:hint="Email"
+                        android:maxLines="1"
+                        android:inputType="textEmailAddress"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,13 +159,16 @@
                     app:startIconTint="@color/persian_green"
                     app:hintTextColor="@color/persian_green"
                     app:startIconDrawable="@drawable/ic_baseline_password_24"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/signUpPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Password"/>
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -160,13 +182,16 @@
                     app:startIconTint="@color/persian_green"
                     app:hintTextColor="@color/persian_green"
                     app:startIconDrawable="@drawable/ic_baseline_password_24"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    app:passwordToggleEnabled="true"
+                    android:maxLines="1">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/signUpConfirmPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Confirm Password"/>
+                        android:hint="Confirm Password"
+                        android:inputType="textPassword" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -211,13 +236,13 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     app:strokeColor="@color/persian_green"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_marginTop="10dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"

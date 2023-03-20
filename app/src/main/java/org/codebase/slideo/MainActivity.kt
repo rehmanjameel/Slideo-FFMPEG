@@ -85,10 +85,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
         }
 
-        buttonAudioId.visibility = View.VISIBLE
-        buttonAudioId.setOnClickListener {
-            startActivity(Intent(this, CombineImages::class.java))
-        }
+//        buttonAudioId.visibility = View.VISIBLE
+//        buttonAudioId.setOnClickListener {
+//            startActivity(Intent(this, CombineImages::class.java))
+//        }
 
     }
 

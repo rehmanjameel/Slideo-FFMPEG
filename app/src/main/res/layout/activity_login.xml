@@ -77,13 +77,15 @@
                     app:boxStrokeErrorColor="@color/red"
                     app:hintTextColor="@color/persian_green"
                     app:startIconTint="@color/persian_green"
-                    app:startIconDrawable="@drawable/ic_baseline_person_24"
+                    app:startIconDrawable="@drawable/ic_baseline_email_24"
                     >
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="User Name"/>
+                        android:hint="Email"
+                        android:maxLines="1"
+                        android:inputType="textEmailAddress"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,7 +105,9 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Password"/>
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 

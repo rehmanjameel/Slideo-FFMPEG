@@ -42,6 +42,7 @@ class SignUpActivity : AppCompatActivity() {
 //        window.setFlags(
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        window.statusBarColor = resources.getColor(R.color.top_bar)
 
         setContentView(R.layout.activity_sign_up)
 
@@ -225,8 +226,8 @@ class SignUpActivity : AppCompatActivity() {
         val userData = UserModel(userName = userName, profileImageUri = profileImageUri, email = email,
             gender = gender, videoUri = "")
 
-        val ref = FirebaseDatabase.getInstance().getReference("/slideo/$uid")
-            .child(FirebaseAuth.getInstance().currentUser!!.email!!)
+        val ref = FirebaseDatabase.getInstance().getReference("/slideo")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid)
             .setValue(userData).addOnCompleteListener{ valuesSent ->
                 if (valuesSent.isSuccessful) {
                     mProgressView.visibility = View.GONE
@@ -238,6 +239,7 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
 
+        Log.e("login success", ref.isSuccessful.toString())
 //        val userMessages = User(uid, userNameEditTextId.text.toString(), profileImageUri)
 
 //        ref.setValue(userMessages)

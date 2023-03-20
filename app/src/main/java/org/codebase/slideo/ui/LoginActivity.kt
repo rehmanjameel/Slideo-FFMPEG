@@ -9,6 +9,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import kotlinx.android.synthetic.main.activity_login.*
 import org.codebase.slideo.MainActivity
 import org.codebase.slideo.R
+import org.codebase.slideo.utils.App
 import org.codebase.slideo.viewmodel.SplashScreenViewModel
 
 class LoginActivity : AppCompatActivity() {
@@ -23,6 +24,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         loginButtonId.setOnClickListener {
+            login()
         }
 
         openSignUpPage.setOnClickListener {
@@ -32,5 +34,9 @@ class LoginActivity : AppCompatActivity() {
         backArrow.setOnClickListener {
             onBackPressed()
         }
+    }
+
+    private fun login() {
+        App.saveLogin(true)
     }
 }
