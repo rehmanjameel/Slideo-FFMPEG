@@ -25,6 +25,7 @@ import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.codebase.slideo.ui.AudioActivity
 import org.codebase.slideo.ui.LoginActivity
+import org.codebase.slideo.ui.ProfileActivity
 import org.codebase.slideo.ui.VideosActivity
 import org.codebase.slideo.utils.App
 import org.codebase.slideo.videoProcessActivity.CombineImages
@@ -145,6 +146,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             } else {
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
             }
         }

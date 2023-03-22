@@ -59,8 +59,8 @@ class LoginActivity : AppCompatActivity() {
         } else {
             login(email = loginEmail, password = loginPassword)
         }
-
     }
+
     private fun login(email: String, password: String) {
         App.saveLogin(true)
 
