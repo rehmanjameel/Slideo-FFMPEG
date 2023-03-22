@@ -155,4 +155,13 @@
 
     </ScrollView>
 
+    <include
+        android:id="@+id/mProgressView"
+        layout="@layout/progress_view"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

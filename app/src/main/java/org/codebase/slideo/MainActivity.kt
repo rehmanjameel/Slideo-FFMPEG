@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -17,12 +18,20 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.GravityCompat
+import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.simform.videooperations.*
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.drawer_header.*
 import org.codebase.slideo.ui.AudioActivity
 import org.codebase.slideo.ui.LoginActivity
 import org.codebase.slideo.ui.ProfileActivity
@@ -39,6 +48,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var mediaFiles: List<MediaFile>? = null
     private var isImageSelected: Boolean = false
     private val ffmpegQueryExtension = FFmpegQueryExtension()
+
+    private lateinit var auth: FirebaseAuth
+    lateinit var textView: TextView
+    lateinit var hImageView: CircleImageView
 
     private val splashViewModel = SplashScreenViewModel()
 
@@ -57,6 +70,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
 
         context = this
+        auth = Firebase.auth
+
+        // get user info
+        val rootRef = FirebaseDatabase.getInstance().reference
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val uidRef = rootRef.child("slideo").child(uid)
+
+        uidRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val snapShot = task.result
+                val imageUrl = snapShot.child("profileImageUri").value
+                val name = snapShot.child("userName").value.toString()
+                val email = snapShot.child("email").value.toString()
+                val userGender = snapShot.child("gender").value.toString()
+                Log.e("uri", imageUrl.toString())
+
+
+                App.saveString("profile_image", imageUrl.toString())
+                App.saveString("user_name", name)
+                App.saveString("user_email", email)
+                App.saveString("gender", userGender)
+
+                Log.e("name of user", App.getString("user_name"))
+                Log.e("name of user", App.getString("profile_image"))
+            }
+        }
+
         setSupportActionBar(my_awesome_toolbar)
 
         checkPermissions()
@@ -65,11 +105,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.string.nav_open, R.string.nav_close)
 
         myDrawerLayoutId.addDrawerListener(actionBarDrawerToggle)
+
         actionBarDrawerToggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         navMenuId.setNavigationItemSelectedListener(this)
+
+        val hView = navMenuId.getHeaderView(0)
+
+
+
+        hImageView = hView.findViewById(R.id.headerImage)
+        textView = hView.findViewById(R.id.headerProfileNameId)
+        textView.text = App.getString("user_name")
+
+        Glide.with(applicationContext)
+            .load(App.getString("profile_image"))
+            .placeholder(R.drawable.ic_baseline_person_24)
+            .error(R.drawable.ic_baseline_person_24)
+            .into(hImageView)
 
         createVideoCardId.setOnClickListener {
             if (checkPermissions()) {
@@ -142,13 +197,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //            Toast.makeText(this, "You are logged out", Toast.LENGTH_SHORT).show()
 //        }
         else if (item.itemId == R.id.profileId) {
-            if (!App.isLoggedIn()) {
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-            } else {
+            val currentUser = auth.currentUser
+            if (currentUser != null) {
                 val intent = Intent(this, ProfileActivity::class.java)
                 startActivity(intent)
-                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
+            } else {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
             }
         }
 

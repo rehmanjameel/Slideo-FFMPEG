@@ -3,6 +3,7 @@ package org.codebase.slideo.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -33,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         loginButtonId.setOnClickListener {
-//            login()
+            validateLoginFields()
         }
 
         openSignUpPage.setOnClickListener {
@@ -45,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun validateLoginFields() {
+    private fun validateLoginFields() {
         val loginEmail = loginEmailId.text.toString()
         val loginPassword = loginPasswordId.text.toString().trim()
 
@@ -57,21 +58,27 @@ class LoginActivity : AppCompatActivity() {
         } else if (loginPassword.isEmpty()) {
             loginPasswordId.error = "Password is required"
         } else {
+            mProgressView.visibility = View.VISIBLE
             login(email = loginEmail, password = loginPassword)
         }
+
     }
 
     private fun login(email: String, password: String) {
-        App.saveLogin(true)
-
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 val user = auth.currentUser
+                mProgressView.visibility = View.GONE
 
+                Log.e("user login", "${user!!.uid} ${user.reload()}" )
                 val intent = Intent(this, ProfileActivity::class.java)
                 startActivity(intent)
+                finish()
+                App.saveLogin(true)
 
             } else {
+                mProgressView.visibility = View.GONE
+
                 Toast.makeText(baseContext, "Authentication failed.",
                     Toast.LENGTH_SHORT).show()
             }
@@ -81,9 +88,11 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-
-        }
+//        val currentUser = auth.currentUser
+//        if (currentUser != null) {
+//            currentUser.reload()
+//            val intent = Intent(this, ProfileActivity::class.java)
+//            startActivity(intent)
+//        }
     }
 }

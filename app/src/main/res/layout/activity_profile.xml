@@ -46,6 +46,17 @@
             android:textColor="@color/white"
             android:layout_toEndOf="@+id/backArrow"/>
 
+        <ImageView
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_logout"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            app:tint="@color/white"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
+
     </RelativeLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView

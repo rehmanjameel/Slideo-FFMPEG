@@ -191,7 +191,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun uploadImageToFirebaseStorage(userName: String, email: String, gender:String) {
         if (imageUri == null) return
         val fileName = UUID.randomUUID().toString()
-        val ref = FirebaseStorage.getInstance().getReference("/slideo_profile/$fileName")
+        val ref = FirebaseStorage.getInstance().getReference("slideo_profile/$fileName")
         ref.putFile(imageUri!!)
             .addOnSuccessListener {
                 Log.d("Image Storage", "Successfully uploaded image: ${it.metadata?.path}")
@@ -226,7 +226,8 @@ class SignUpActivity : AppCompatActivity() {
         val userData = UserModel(userName = userName, profileImageUri = profileImageUri, email = email,
             gender = gender, videoUri = "")
 
-        val ref = FirebaseDatabase.getInstance().getReference("/slideo")
+        val ref = FirebaseDatabase.getInstance().getReference("slideo")
+//            .child("videos/")
             .child(FirebaseAuth.getInstance().currentUser!!.uid)
             .setValue(userData).addOnCompleteListener{ valuesSent ->
                 if (valuesSent.isSuccessful) {
