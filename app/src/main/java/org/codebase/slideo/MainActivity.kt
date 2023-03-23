@@ -72,31 +72,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         context = this
         auth = Firebase.auth
 
-        // get user info
-        val rootRef = FirebaseDatabase.getInstance().reference
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val uidRef = rootRef.child("slideo").child(uid)
-
-        uidRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val snapShot = task.result
-                val imageUrl = snapShot.child("profileImageUri").value
-                val name = snapShot.child("userName").value.toString()
-                val email = snapShot.child("email").value.toString()
-                val userGender = snapShot.child("gender").value.toString()
-                Log.e("uri", imageUrl.toString())
-
-
-                App.saveString("profile_image", imageUrl.toString())
-                App.saveString("user_name", name)
-                App.saveString("user_email", email)
-                App.saveString("gender", userGender)
-
-                Log.e("name of user", App.getString("user_name"))
-                Log.e("name of user", App.getString("profile_image"))
-            }
-        }
-
         setSupportActionBar(my_awesome_toolbar)
 
         checkPermissions()
@@ -118,13 +93,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         hImageView = hView.findViewById(R.id.headerImage)
         textView = hView.findViewById(R.id.headerProfileNameId)
-        textView.text = App.getString("user_name")
-
-        Glide.with(applicationContext)
-            .load(App.getString("profile_image"))
-            .placeholder(R.drawable.ic_baseline_person_24)
-            .error(R.drawable.ic_baseline_person_24)
-            .into(hImageView)
 
         createVideoCardId.setOnClickListener {
             if (checkPermissions()) {
@@ -189,16 +157,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val intent = Intent(this, VideosActivity::class.java)
             startActivity(intent)
         }
-//        else if (item.itemId == R.id.loginId) {
-//            val intent = Intent(this, LoginActivity::class.java)
-//            startActivity(intent)
-//        }
-//        else if (item.itemId == R.id.nav_logout) {
-//            Toast.makeText(this, "You are logged out", Toast.LENGTH_SHORT).show()
-//        }
         else if (item.itemId == R.id.profileId) {
             val currentUser = auth.currentUser
-            if (currentUser != null) {
+            if (App.isLoggedIn()) {
                 val intent = Intent(this, ProfileActivity::class.java)
                 startActivity(intent)
             } else {
@@ -396,5 +357,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .setNegativeButton("Cancel", okListener)
             .create()
             .show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (App.isLoggedIn()) {
+            textView.text = App.getString("user_name")
+
+            Glide.with(applicationContext)
+                .load(App.getString("profile_image"))
+                .placeholder(R.drawable.ic_baseline_person_24)
+                .error(R.drawable.ic_baseline_person_24)
+                .into(hImageView)
+        } else {
+            textView.text = getString(R.string.app_name)
+
+            Glide.with(applicationContext)
+                .load(R.drawable.slideo_logo)
+                .placeholder(R.drawable.ic_baseline_person_24)
+                .error(R.drawable.ic_baseline_person_24)
+                .into(hImageView)
+        }
     }
 }

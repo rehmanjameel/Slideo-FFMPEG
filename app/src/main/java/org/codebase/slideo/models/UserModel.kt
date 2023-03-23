@@ -4,7 +4,6 @@ class UserModel(
     val userName: String,
     val profileImageUri: String,
     val email: String,
-    val gender: String,
-    val videoUri: String
+    val gender: String
 
 ) : java.io.Serializable

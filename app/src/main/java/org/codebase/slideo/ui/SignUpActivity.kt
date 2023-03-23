@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import org.codebase.slideo.R
 import org.codebase.slideo.models.UserModel
+import org.codebase.slideo.models.VideosModel
 import org.codebase.slideo.utils.App
 import java.util.*
 import java.util.regex.Pattern
@@ -224,12 +225,10 @@ class SignUpActivity : AppCompatActivity() {
         App.saveString("UID", uid)
 
         val userData = UserModel(userName = userName, profileImageUri = profileImageUri, email = email,
-            gender = gender, videoUri = "")
+            gender = gender)
 
-        val ref = FirebaseDatabase.getInstance().getReference("slideo")
-//            .child("videos/")
-            .child(FirebaseAuth.getInstance().currentUser!!.uid)
-            .setValue(userData).addOnCompleteListener{ valuesSent ->
+        val ref = FirebaseDatabase.getInstance().getReference("slideo/${FirebaseAuth.getInstance().currentUser!!.uid}")
+        ref.setValue(userData).addOnCompleteListener{ valuesSent ->
                 if (valuesSent.isSuccessful) {
                     mProgressView.visibility = View.GONE
                     Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show()
@@ -240,8 +239,11 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
 
-        Log.e("login success", ref.isSuccessful.toString())
-//        val userMessages = User(uid, userNameEditTextId.text.toString(), profileImageUri)
+        val userVideos = VideosModel(videoUri = "")
+        val vidRef = ref.child("videos")
+        vidRef.setValue(userVideos)
+        Log.e("login success", vidRef.toString())
+
 
 //        ref.setValue(userMessages)
 //            .addOnSuccessListener {
