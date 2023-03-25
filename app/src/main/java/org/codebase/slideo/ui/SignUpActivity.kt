@@ -239,10 +239,10 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
 
-        val userVideos = VideosModel(videoUri = "")
-        val vidRef = ref.child("videos")
-        vidRef.setValue(userVideos)
-        Log.e("login success", vidRef.toString())
+//        val userVideos = VideosModel(videoUri = "")
+//        val vidRef = ref.child("videos")
+//        vidRef.setValue(userVideos)
+//        Log.e("login success", vidRef.toString())
 
 
 //        ref.setValue(userMessages)
