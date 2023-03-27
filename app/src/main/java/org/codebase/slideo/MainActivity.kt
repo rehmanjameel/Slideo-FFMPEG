@@ -1,17 +1,21 @@
 package org.codebase.slideo
 
 import android.Manifest.permission.*
+import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -119,10 +123,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && data != null) {
-            mediaFiles = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES)
+            mediaFiles = data.parcelableArrayList(FilePickerActivity.MEDIA_FILES)
             Log.e("mdeia files ", mediaFiles.toString())
             (this as FileSelection).selectedFiles(mediaFiles,requestCode)
         }
+    }
+
+//    val activityResultLauncher = registerForActivityResult(
+//        ActivityResultContracts.StartActivityForResult()
+//    ) { result ->
+//        if (result.resultCode == Activity.RESULT_OK) {
+//            val intent = result.data
+//            if (intent != null) {
+//                mediaFiles = intent.parcelableArrayList(FilePickerActivity.MEDIA_FILES)
+//                (this as FileSelection).selectedFiles(mediaFiles, result.resultCode)
+//            }
+//        }
+//    }
+
+    private inline fun <reified T : Parcelable> Intent.parcelableArrayList(key: String): ArrayList<T>? = when {
+        SDK_INT >= 33 -> getParcelableArrayListExtra(key, T::class.java)
+        else -> @Suppress("DEPRECATION") getParcelableArrayListExtra(key)
     }
 
     override fun selectedFiles(mediaFiles: List<MediaFile>?, requestCode: Int) {
@@ -158,7 +179,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
         }
         else if (item.itemId == R.id.profileId) {
-            val currentUser = auth.currentUser
+//            val currentUser = auth.currentUser
             if (App.isLoggedIn()) {
                 val intent = Intent(this, ProfileActivity::class.java)
                 startActivity(intent)

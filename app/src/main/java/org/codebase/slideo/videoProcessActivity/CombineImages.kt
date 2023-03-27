@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.OrientationEventListener
@@ -33,18 +32,14 @@ import kotlinx.android.synthetic.main.activity_combine_images.mProgressView
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import kotlinx.android.synthetic.main.alert_dialog_layout.*
 import kotlinx.android.synthetic.main.custom_controller.*
-import org.codebase.slideo.MainActivity
 import org.codebase.slideo.R
 import org.codebase.slideo.db.RoomDB
 import org.codebase.slideo.models.SaveVideoModel
-import org.codebase.slideo.models.UserModel
 import org.codebase.slideo.models.VideosModel
 import org.codebase.slideo.ui.AudioActivity
-import org.codebase.slideo.ui.LoginActivity
 import org.codebase.slideo.utils.App
 import java.io.File
 import java.util.*
-import kotlin.math.log
 
 class CombineImages : AppCompatActivity() {
 
@@ -66,6 +61,14 @@ class CombineImages : AppCompatActivity() {
 
         supportActionBar?.hide()
 
+        if (App.isLoggedIn()) {
+            uploadVideoToFirebase.visibility = View.VISIBLE
+            saveVideoToDB.visibility = View.GONE
+        } else {
+            uploadVideoToFirebase.visibility = View.GONE
+            saveVideoToDB.visibility = View.VISIBLE
+        }
+
         videoPath = intent.getStringExtra("video_path").toString()
         Common.loadVideoFromInternalStorage(videoPath)
         Log.e("vedo path ", "$videoPath + $intentAudioPath")
@@ -81,12 +84,16 @@ class CombineImages : AppCompatActivity() {
 
         roomDB = RoomDB.getDataBase(this)
         saveVideoToDB.setOnClickListener {
-            uploadImageToFirebaseStorage()
+            uploadVideoToFirebaseStorage()
             Log.e("internal path", videoOutPutPath)
             roomDB.saveVideoDao().addVideo(SaveVideoModel(0,
                 App.getString("video_output_path"), System.currentTimeMillis().toString()))
             Snackbar.make(this, it, "Video Saved Successfully!",
                 Snackbar.ANIMATION_MODE_SLIDE).show()
+        }
+
+        uploadVideoToFirebase.setOnClickListener {
+            uploadVideoToFirebaseStorage()
         }
 
         cancelVideoId.setOnClickListener {
@@ -192,9 +199,6 @@ class CombineImages : AppCompatActivity() {
         val query =
             ffmpegQueryExtension.mergeAudioVideo(App.getString("video_output_path"),
             intentAudioPath, videoOutPutPath)
-//            arrayOf("-i", App.getString("video_output_path"), "-i", intentAudioPath,
-//            "-c:v", "copy", "-c:a", "aac", "-strict", "experimental", "-map",
-//            "0:v:0", "-map", "1:a:0", "-shortest", videoOutPutPath)
 
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
             override fun process(logMessage: LogMessage) {
@@ -353,10 +357,11 @@ class CombineImages : AppCompatActivity() {
         }
     }
 
-    private fun uploadImageToFirebaseStorage() {
+    private fun uploadVideoToFirebaseStorage() {
         val videoPath = App.getString("video_output_path")
         Log.e("video out path in", videoPath)
         if (videoPath.isEmpty()) return
+        mProgressView.visibility = View.VISIBLE
         val fileName = UUID.randomUUID().toString()
         val ref = FirebaseStorage.getInstance().getReference("slideo_profile/$fileName")
         ref.putFile(File(videoPath).toUri())
@@ -366,13 +371,8 @@ class CombineImages : AppCompatActivity() {
                 ref.downloadUrl.addOnSuccessListener {videoUri ->
                     android.util.Log.d("video uri", "File Location: $videoUri")
 
-//                    App.saveString("ProfileImageUrl", imageUri.toString())
                     saveUserToFireBaseDatabase(videoUri.toString())
-                    mProgressView.visibility = View.GONE
 
-//                    val intent = Intent(this, LoginActivity::class.java)
-//                    startActivity(intent)
-//                    finish()
                 }.addOnFailureListener {e ->
                     mProgressView.visibility = View.GONE
 
@@ -392,8 +392,7 @@ class CombineImages : AppCompatActivity() {
         val userVideos = VideosModel(videoUri = videoUri)
 
         val ref = FirebaseDatabase.getInstance().getReference("slideo/${FirebaseAuth.getInstance().currentUser!!.uid}")
-            .child(System.currentTimeMillis().toString())
-            .child("videos")
+            .child("videos").child(System.currentTimeMillis().toString())
         ref.setValue(userVideos).addOnCompleteListener{ videoSent ->
             if (videoSent.isSuccessful) {
                 mProgressView.visibility = View.GONE
@@ -405,16 +404,6 @@ class CombineImages : AppCompatActivity() {
             }
         }
 
-
-//        val vidRef = ref.child("videos")
-//        vidRef.setValue(userVideos)
-//        android.util.Log.e("login success", vidRef.toString())
-
-
-//        ref.setValue(userMessages)
-//            .addOnSuccessListener {
-//                Log.d("Data to FBDB", "Successfully added")
-//            }
     }
 
     companion object {
