@@ -396,7 +396,7 @@ class CombineImages : AppCompatActivity() {
         ref.setValue(userVideos).addOnCompleteListener{ videoSent ->
             if (videoSent.isSuccessful) {
                 mProgressView.visibility = View.GONE
-                Toast.makeText(this, "video saved successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "video saved successfully!", Toast.LENGTH_SHORT).show()
             } else {
                 mProgressView.visibility = View.GONE
                 Toast.makeText(this, "video sent failed ${videoSent.exception!!.message}",
