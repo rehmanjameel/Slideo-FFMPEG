@@ -50,11 +50,20 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/videosRVId"
+        android:id="@+id/fireVideosRVId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:listitem="@layout/video_view_layout"
         app:layout_constraintTop_toBottomOf="@id/titleId"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/videosRVId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/video_view_layout"
+        app:layout_constraintTop_toBottomOf="@id/fireVideosRVId"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

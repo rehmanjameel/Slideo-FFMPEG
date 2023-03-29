@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import org.codebase.slideo.models.SaveVideoModel
+import org.codebase.slideo.models.VideosModel
 
 @Dao
 interface VideoDao {
@@ -20,5 +21,18 @@ interface VideoDao {
 
     @Query("Delete from save_videos_table")
     suspend fun deleteVideos()
+
+    // insert firebase videos
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun addFireVideo(videosModel: VideosModel)
+
+    @Query("Select * from save_videos_table order by video_id ASC")
+    fun getAllFireVideos(): LiveData<List<SaveVideoModel>>
+
+    @Query("Delete from save_videos_table where video_id= :deleteVideoId")
+    fun deleteFireVideo(deleteVideoId: Int)
+
+    @Query("Delete from save_videos_table")
+    suspend fun deleteFireVideos()
 
 }

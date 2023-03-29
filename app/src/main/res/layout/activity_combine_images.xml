@@ -25,7 +25,7 @@
             android:id="@+id/uploadVideoToFirebase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Upload"
+            android:text="Done"
             android:textColor="@color/white"
             android:padding="15dp"
             android:layout_alignParentEnd="true"

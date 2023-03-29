@@ -24,7 +24,6 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import org.codebase.slideo.R
 import org.codebase.slideo.models.UserModel
-import org.codebase.slideo.models.VideosModel
 import org.codebase.slideo.utils.App
 import java.util.*
 import java.util.regex.Pattern

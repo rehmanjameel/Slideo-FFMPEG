@@ -84,7 +84,7 @@ class CombineImages : AppCompatActivity() {
 
         roomDB = RoomDB.getDataBase(this)
         saveVideoToDB.setOnClickListener {
-            uploadVideoToFirebaseStorage()
+//            uploadVideoToFirebaseStorage()
             Log.e("internal path", videoOutPutPath)
             roomDB.saveVideoDao().addVideo(SaveVideoModel(0,
                 App.getString("video_output_path"), System.currentTimeMillis().toString()))
@@ -93,11 +93,13 @@ class CombineImages : AppCompatActivity() {
         }
 
         uploadVideoToFirebase.setOnClickListener {
-            uploadVideoToFirebaseStorage()
+            File(videoPath).delete()
+            uploadVideoToFirebaseStorage(it)
         }
 
         cancelVideoId.setOnClickListener {
             App.removeKey("audio_path")
+            File(videoPath).delete()
             onBackPressed()
         }
 
@@ -357,7 +359,7 @@ class CombineImages : AppCompatActivity() {
         }
     }
 
-    private fun uploadVideoToFirebaseStorage() {
+    private fun uploadVideoToFirebaseStorage(view: View) {
         val videoPath = App.getString("video_output_path")
         Log.e("video out path in", videoPath)
         if (videoPath.isEmpty()) return
@@ -371,7 +373,7 @@ class CombineImages : AppCompatActivity() {
                 ref.downloadUrl.addOnSuccessListener {videoUri ->
                     android.util.Log.d("video uri", "File Location: $videoUri")
 
-                    saveUserToFireBaseDatabase(videoUri.toString())
+                    saveUserToFireBaseDatabase(view, videoUri.toString())
 
                 }.addOnFailureListener {e ->
                     mProgressView.visibility = View.GONE
@@ -385,17 +387,22 @@ class CombineImages : AppCompatActivity() {
             }
     }
 
-    private fun saveUserToFireBaseDatabase(videoUri: String) {
+    private fun saveUserToFireBaseDatabase(view: View, videoUri: String) {
+        var count = 0
         val uid = FirebaseAuth.getInstance().uid ?: ""
         App.saveString("UID", uid)
 
-        val userVideos = VideosModel(videoUri = videoUri)
+        val userVideos = VideosModel(videoId = count, videoUri = videoUri)
 
         val ref = FirebaseDatabase.getInstance().getReference("slideo/${FirebaseAuth.getInstance().currentUser!!.uid}")
             .child("videos").child(System.currentTimeMillis().toString())
         ref.setValue(userVideos).addOnCompleteListener{ videoSent ->
             if (videoSent.isSuccessful) {
                 mProgressView.visibility = View.GONE
+                Snackbar.make(this, view, "Video Saved Successfully!",
+                    Snackbar.ANIMATION_MODE_SLIDE).show()
+                count ++
+                roomDB.saveVideoDao().addFireVideo(VideosModel(0, videoUri))
                 Toast.makeText(this, "video saved successfully!", Toast.LENGTH_SHORT).show()
             } else {
                 mProgressView.visibility = View.GONE
