@@ -9,6 +9,7 @@ import java.io.Serializable
 class VideosModel (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "video_id") val videoId: Int,
-    @ColumnInfo(name = "video_uri") val videoUri: String
+    @ColumnInfo(name = "video_uri") val videoUri: String,
+    @ColumnInfo(name = "video_key") var videoKey: String = ""
 
 ) : Serializable

@@ -27,7 +27,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.model.MediaFile
@@ -57,6 +61,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var textView: TextView
     lateinit var hImageView: CircleImageView
 
+    var count = 0
     private val splashViewModel = SplashScreenViewModel()
 
     companion object {
@@ -117,6 +122,49 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //        buttonAudioId.setOnClickListener {
 //            startActivity(Intent(this, CombineImages::class.java))
 //        }
+
+        // get user info
+        val rootRef = FirebaseDatabase.getInstance().reference
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val uidRef = rootRef.child("slideo").child(uid).child("videos")
+        com.google.android.exoplayer2.util.Log.e("time child", uidRef.toString())
+        uidRef.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.e("videos of firebase",
+                    snapshot.child("videos").value.toString())
+                for (d in snapshot.children) {
+                    count++
+                    Log.e("videos of furebase ${count}", d.value.toString() + d.key)
+
+                    Log.e("videos of firebase",
+                        d.child("videos").value.toString())
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        uidRef.addChildEventListener(object : ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.e("childListener", "${snapshot.child("videoUri").value}")
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
 
     }
 

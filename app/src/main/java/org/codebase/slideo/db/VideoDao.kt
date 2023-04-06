@@ -26,13 +26,13 @@ interface VideoDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun addFireVideo(videosModel: VideosModel)
 
-    @Query("Select * from save_videos_table order by video_id ASC")
-    fun getAllFireVideos(): LiveData<List<SaveVideoModel>>
+    @Query("Select * from fire_videos_table order by video_id ASC")
+    fun getAllFireVideos(): LiveData<List<VideosModel>>
 
-    @Query("Delete from save_videos_table where video_id= :deleteVideoId")
+    @Query("Delete from fire_videos_table where video_id= :deleteVideoId")
     fun deleteFireVideo(deleteVideoId: Int)
 
-    @Query("Delete from save_videos_table")
-    suspend fun deleteFireVideos()
+    @Query("Delete from fire_videos_table")
+    fun deleteFireVideos()
 
 }

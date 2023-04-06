@@ -24,7 +24,7 @@ import com.google.android.exoplayer2.util.Log
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.simform.videooperations.*
 import kotlinx.android.synthetic.main.activity_combine_images.*
@@ -44,6 +44,7 @@ import java.util.*
 class CombineImages : AppCompatActivity() {
 
     private var playbackPosition = 0L
+    var count = 0
     private var exoPlayer: ExoPlayer? = null
     var mOrientationListener: OrientationEventListener? = null
     lateinit var videoPath: String
@@ -93,13 +94,13 @@ class CombineImages : AppCompatActivity() {
         }
 
         uploadVideoToFirebase.setOnClickListener {
-            File(videoPath).delete()
             uploadVideoToFirebaseStorage(it)
+//            File(videoPath).delete()
         }
 
         cancelVideoId.setOnClickListener {
             App.removeKey("audio_path")
-            File(videoPath).delete()
+//            File(videoPath).delete()
             onBackPressed()
         }
 
@@ -388,21 +389,75 @@ class CombineImages : AppCompatActivity() {
     }
 
     private fun saveUserToFireBaseDatabase(view: View, videoUri: String) {
-        var count = 0
         val uid = FirebaseAuth.getInstance().uid ?: ""
         App.saveString("UID", uid)
 
         val userVideos = VideosModel(videoId = count, videoUri = videoUri)
 
         val ref = FirebaseDatabase.getInstance().getReference("slideo/${FirebaseAuth.getInstance().currentUser!!.uid}")
-            .child("videos").child(System.currentTimeMillis().toString())
+            .child("videos").child("${System.currentTimeMillis()}")
         ref.setValue(userVideos).addOnCompleteListener{ videoSent ->
             if (videoSent.isSuccessful) {
                 mProgressView.visibility = View.GONE
                 Snackbar.make(this, view, "Video Saved Successfully!",
                     Snackbar.ANIMATION_MODE_SLIDE).show()
                 count ++
-                roomDB.saveVideoDao().addFireVideo(VideosModel(0, videoUri))
+
+                // get user info
+                val rootRef = FirebaseDatabase.getInstance().reference
+                val uid = FirebaseAuth.getInstance().currentUser!!.uid
+                val uidRef = rootRef.child("slideo").child(uid).child("videos")
+
+//                uidRef.addListenerForSingleValueEvent(object: ValueEventListener{
+//                    override fun onDataChange(snapshot: DataSnapshot) {
+//                        for (d: DataSnapshot in snapshot.children) {
+//                            Log.e("videos of furebase", d.value.toString())
+//                            Log.e("videos of furebase", d.child("videoUri").toString())
+//                        }
+//                    }
+//
+//                    override fun onCancelled(error: DatabaseError) {
+//                    }
+//
+//                })
+
+                uidRef.addChildEventListener(object : ChildEventListener {
+                    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                        roomDB.saveVideoDao().deleteFireVideos()
+                        roomDB.saveVideoDao().addFireVideo(VideosModel(videoId = 0,
+                            videoUri = "${snapshot.child("videoUri").value}", videoKey = snapshot.key.toString()))
+                        Log.e("childListener", "${snapshot.child("videoUri").value}" +
+                                " ./,${snapshot.key}./, ${snapshot.value} ./,${snapshot.children}")
+                    }
+
+                    override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                        Log.e("childListener2", "${snapshot.child("videoUri").value}")
+                        Log.e("childListener3", previousChildName.toString())
+
+                    }
+
+                    override fun onChildRemoved(snapshot: DataSnapshot) {
+                    }
+
+                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+
+                })
+//                uidRef.get().addOnCompleteListener { fetch ->
+//                    if (fetch.isSuccessful) {
+//                        val snapshot = fetch.result
+//                        Log.e("videos of furebase", snapshot.childrenCount.toString())
+//
+//                        for (i in snapshot.childrenCount.toString()) {
+//                            Log.e("videos of furebase", uidRef.child())
+//                        }
+//                    }
+//                }
+
+
                 Toast.makeText(this, "video saved successfully!", Toast.LENGTH_SHORT).show()
             } else {
                 mProgressView.visibility = View.GONE

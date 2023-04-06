@@ -18,13 +18,13 @@
             android:orientation="vertical"
             android:paddingBottom="10dp">
 
-<!--            <TextView-->
-<!--                android:id="@+id/videoDateTime"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textSize="14sp"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:layout_marginBottom="5dp"/>-->
+            <ImageView
+                android:id="@+id/fireImageId"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:textSize="14sp"
+                android:visibility="gone"
+                android:src="@drawable/firebase"/>
 
             <com.google.android.exoplayer2.ui.PlayerView
                 android:id="@+id/playerId"

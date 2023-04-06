@@ -8,13 +8,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import kotlinx.android.synthetic.main.activity_videos.*
 import org.codebase.slideo.R
+import org.codebase.slideo.adapters.FireVideosAdapter
 import org.codebase.slideo.adapters.VideosLibraryAdapter
 import org.codebase.slideo.db.RoomDB
 import org.codebase.slideo.models.SaveVideoModel
+import org.codebase.slideo.models.VideosModel
 
 class VideosActivity : AppCompatActivity() {
 
     lateinit var videoAdapter: VideosLibraryAdapter
+    lateinit var fireAdapter: FireVideosAdapter
     lateinit var roomDB: RoomDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +38,16 @@ class VideosActivity : AppCompatActivity() {
 
         roomDB.saveVideoDao().getAllVideos().observe(this, Observer { list ->
             videoAdapter.setData(list as ArrayList<SaveVideoModel>)
+        })
+
+        fireAdapter = FireVideosAdapter(this)
+        fireVideosRVId.layoutManager = LinearLayoutManager(this)
+        fireVideosRVId.adapter = fireAdapter
+
+        roomDB = RoomDB.getDataBase(this)
+
+        roomDB.saveVideoDao().getAllFireVideos().observe(this, Observer { list ->
+            fireAdapter.setData(list as ArrayList<VideosModel>)
         })
 
         videoBackIcon.setOnClickListener {
