@@ -80,13 +80,14 @@ public class FFmpegQueryExtension {
         return inputs.toArray(arrayOfNulls<String>(inputs.size))
     }
 
-    fun addTextOnVideo(inputVideo: String, textInput: String, posX: Float?, posY: Float?, fontPath: String,
-                       isTextBackgroundDisplay: Boolean, fontSize: Int, fontcolor: String, output: String,
-                       startTime: String?, endTime: String?): Array<String> {
+    fun addTextOnVideo(
+        inputVideo: String, textInput: String, posX: Float?, posY: Int, fontPath: String,
+        isTextBackgroundDisplay: Boolean, fontSize: Int, fontcolor: String, output: String,
+        startTime: String?, endTime: String?): Array<String> {
         val inputs: ArrayList<String> = ArrayList()
         var borderQuery = ""
         if (isTextBackgroundDisplay) {
-            borderQuery = ":box=1:boxcolor=black@0.5:boxborderw=5"
+            borderQuery = ":box=1:boxcolor=yellow@0.8:boxborderw=5"
         }
         Log.e("test text is here", "$startTime,,.,.$endTime")
         inputs.apply {

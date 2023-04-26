@@ -134,6 +134,29 @@ class CombineImages : AppCompatActivity() {
     }
 
     private fun addTextProcess(textInput: String, startTime: String, endTime: String) {
+
+        val videoWidth = 1280 // 720p resolution
+        val maxLineLength = (videoWidth /20) // max 20 characters per 100 pixels of width
+
+//        val lines = textInput.split("(?<=\\s)".toRegex()).map { line ->
+//            line.chunked(maxLineLength).joinToString("\n")
+//        }
+//        val words = textInput.split(" ")
+//        val lines = mutableListOf<String>()
+//        var currentLine = ""
+//        for (word in words) {
+//            if (currentLine.isNotEmpty() && (currentLine.length + 1 + word.length) > maxLineLength) {
+//                lines.add(currentLine.trim())
+//                currentLine = ""
+//            }
+//            currentLine += "$word "
+//        }
+//        if (currentLine.isNotBlank()) {
+//            lines.add(currentLine.trim())
+//        }
+//
+//        val wrappedText = lines.joinToString("\n")
+
         videoOutPutPath = Common.getInternalPath(this, Common.VIDEO)
 //        val xPos = width?.let {
 //            (edtXPos.text.toString().toFloat().times(it)).div(100)
@@ -141,14 +164,16 @@ class CombineImages : AppCompatActivity() {
 //        val yPos = height?.let {
 //            (edtYPos.text.toString().toFloat().times(it)).div(100)
 //        }
-        val fontPath = Common.getFileFromAssets(this, "little_lord.ttf").absolutePath
-        android.util.Log.e("test text is here5454", "$startTime,,.,.$endTime")
+        val fontPath = Common.getFileFromAssets(this, "chandas.ttf").absolutePath
+        android.util.Log.e("test text is here5454", "$startTime,,.,.$endTime ${(720-videoTextET.measuredWidth)/2f}")
 
+        videoTextET.measure(0, 0)
+        Log.e("measure", "${videoTextET.measuredHeight} ${videoTextET.measuredWidth}")
         val query = ffmpegQueryExtension.addTextOnVideo(
             App.getString("video_output_path"),
-            textInput, 200f, 1000f,
+            textInput, ((720-videoTextET.measuredWidth)/2f), (1080-videoTextET.measuredHeight),
             fontPath = fontPath, isTextBackgroundDisplay = true,
-            fontSize = 70, fontcolor = "red", output = videoOutPutPath, startTime, endTime)
+            fontSize = 50, fontcolor = "white", output = videoOutPutPath, startTime, endTime)
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
             override fun process(logMessage: LogMessage) {
 //                tvOutputPath.text = logMessage.text

@@ -125,46 +125,52 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // get user info
         val rootRef = FirebaseDatabase.getInstance().reference
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val uidRef = rootRef.child("slideo").child(uid).child("videos")
-        com.google.android.exoplayer2.util.Log.e("time child", uidRef.toString())
-        uidRef.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                Log.e("videos of firebase",
-                    snapshot.child("videos").value.toString())
-                for (d in snapshot.children) {
-                    count++
-                    Log.e("videos of furebase ${count}", d.value.toString() + d.key)
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        if (uid != null) {
+            val uidRef = rootRef.child("slideo").child(uid).child("videos")
+            com.google.android.exoplayer2.util.Log.e("time child", uidRef.toString())
+            uidRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    Log.e(
+                        "videos of firebase",
+                        snapshot.child("videos").value.toString()
+                    )
+                    for (d in snapshot.children) {
+                        count++
+                        Log.e("videos of furebase ${count}", d.value.toString() + d.key)
 
-                    Log.e("videos of firebase",
-                        d.child("videos").value.toString())
+                        Log.e(
+                            "videos of firebase",
+                            d.child("videos").value.toString()
+                        )
+                    }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-        })
+            })
 
-        uidRef.addChildEventListener(object : ChildEventListener{
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.e("childListener", "${snapshot.child("videoUri").value}")
-            }
+            uidRef.addChildEventListener(object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    Log.e("childListener", "${snapshot.child("videoUri").value}")
+                }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-            }
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                }
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-            }
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                }
 
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-            }
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                }
 
-            override fun onCancelled(error: DatabaseError) {
-            }
+                override fun onCancelled(error: DatabaseError) {
+                }
 
-        })
+            })
+        }
 
     }
 

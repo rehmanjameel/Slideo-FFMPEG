@@ -151,6 +151,7 @@
                 android:textColor="@color/white"
                 android:cursorVisible="true"
                 android:maxLines="3"
+                android:textStyle="bold"
                 android:textCursorDrawable="@drawable/edit_text_cursor"
                 android:hint="Enter text here"/>
 
