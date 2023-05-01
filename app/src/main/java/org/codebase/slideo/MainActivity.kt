@@ -7,6 +7,7 @@ import android.content.ContextWrapper
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
@@ -16,6 +17,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -104,10 +106,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         textView = hView.findViewById(R.id.headerProfileNameId)
 
         createVideoCardId.setOnClickListener {
+            Log.e("in permissions yes", checkPermissions().toString())
+
+            Common.selectFile(this, maxSelection = 6, isImageSelection = true, isAudioSelection = true)
             if (checkPermissions()) {
+                Log.e("in permissions true", checkPermissions().toString())
                 //Select images from gallery to make video
-                Common.selectFile(this, maxSelection = 6, isImageSelection = true, isAudioSelection = true)
             } else {
+                Log.e("in permissions", checkPermissions().toString())
                 checkPermissions()
             }
         }
@@ -177,9 +183,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && data != null) {
-            mediaFiles = data.parcelableArrayList(FilePickerActivity.MEDIA_FILES)
-            Log.e("mdeia files ", mediaFiles.toString())
-            (this as FileSelection).selectedFiles(mediaFiles,requestCode)
+            mediaFiles = data.parcelableArrayList("MEDIA_FILES")
+            Log.e("mdeia files ", "$data ${mediaFiles.toString()}")
+            (this as FileSelection).selectedFiles(mediaFiles, requestCode)
         }
     }
 
@@ -345,30 +351,158 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /*private fun checkPermissions(): Boolean {
+        val permissionList = mutableListOf<String>()
+
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            // On Android 11 and higher, use MediaStore API to access media files
+            if (ContextCompat.checkSelfPermission(
+                    applicationContext, MANAGE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionList.add(MANAGE_EXTERNAL_STORAGE)
+            }
+        } else {
+            // On Android 10 and lower, use legacy storage access framework
+            if (ContextCompat.checkSelfPermission(
+                    applicationContext,
+                    READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionList.add(READ_EXTERNAL_STORAGE)
+            }
+            if (ContextCompat.checkSelfPermission(
+                    applicationContext,
+                    WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionList.add(WRITE_EXTERNAL_STORAGE)
+            }
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                applicationContext,
+                CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionList.add(CAMERA)
+        }
+
+        if (permissionList.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionList.toTypedArray(),
+                1
+            )
+            return false
+        }
+
+        return true
+    }*/
+
+
+    /*@RequiresApi(Build.VERSION_CODES.M)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == 1) {
+            val permissionMap: MutableMap<String, Int> = mutableMapOf()
+
+            if (SDK_INT >= Build.VERSION_CODES.R) {
+                permissionMap[MANAGE_EXTERNAL_STORAGE] = PackageManager.PERMISSION_GRANTED
+            } else {
+                permissionMap[READ_EXTERNAL_STORAGE] = PackageManager.PERMISSION_GRANTED
+                permissionMap[WRITE_EXTERNAL_STORAGE] = PackageManager.PERMISSION_GRANTED
+            }
+
+            permissionMap[CAMERA] = PackageManager.PERMISSION_GRANTED
+
+            if (grantResults.isNotEmpty()) {
+                for (i in permissions.indices) {
+                    permissionMap[permissions[i]] = grantResults[i]
+                }
+
+                if (permissionMap.all { it.value == PackageManager.PERMISSION_GRANTED }) {
+                    // All permissions are granted
+                    Log.d("TAG", "All permissions granted")
+                } else {
+                    // Some permissions are not granted
+                    Log.d("TAG", "Some permissions not granted ask again")
+
+                    val deniedPermissions = permissionMap.filter { it.value != PackageManager.PERMISSION_GRANTED }.keys
+                    val rationalePermissions = mutableListOf<String>()
+
+                    for (permission in deniedPermissions) {
+                        if (shouldShowRequestPermissionRationale(permission)) {
+                            rationalePermissions.add(permission)
+                        }
+                    }
+
+                    if (rationalePermissions.isNotEmpty()) {
+                        showDialogOK("Storage and camera permissions are required") { _, which ->
+                            when (which) {
+                                DialogInterface.BUTTON_POSITIVE -> checkPermissions()
+                                DialogInterface.BUTTON_NEGATIVE -> {
+                                    // User cancelled the dialog
+                                }
+                            }
+                        }
+                    } else {
+                        Toast.makeText(this, "Go to settings and enable permissions", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }*/
+
+
     private fun checkPermissions() : Boolean{
         //Ask for permissions
-        val externalStorageReadPermission: Int = ContextCompat.checkSelfPermission(
+        var externalStorageReadPermission: Int = ContextCompat.checkSelfPermission(
             applicationContext, READ_EXTERNAL_STORAGE)
+        var videoPerm: Int = 0
+
+        if (SDK_INT > 32) {
+            externalStorageReadPermission = ContextCompat.checkSelfPermission(
+                applicationContext, MANAGE_EXTERNAL_STORAGE
+            )
+            videoPerm = ContextCompat.checkSelfPermission(
+                applicationContext, READ_MEDIA_VIDEO)
+        }
+
         val externalStorageWritePermission: Int = ContextCompat.checkSelfPermission(
-            applicationContext, READ_EXTERNAL_STORAGE)
+            applicationContext, WRITE_EXTERNAL_STORAGE)
         val cameraPermission: Int = ContextCompat.checkSelfPermission(
             applicationContext, CAMERA)
         val listPermissionNeeded: ArrayList<String> = ArrayList()
 
         if (externalStorageReadPermission != PackageManager.PERMISSION_GRANTED) {
-            listPermissionNeeded.add(READ_EXTERNAL_STORAGE)
+            if (SDK_INT > 32) {
+                listPermissionNeeded.add(READ_MEDIA_IMAGES)
+            } else
+                listPermissionNeeded.add(READ_EXTERNAL_STORAGE)
+        }
+        if (videoPerm != PackageManager.PERMISSION_GRANTED) {
+            if (SDK_INT > 32) {
+                listPermissionNeeded.add(READ_MEDIA_VIDEO)
+            }
+
         }
         if (externalStorageWritePermission != PackageManager.PERMISSION_GRANTED) {
-            listPermissionNeeded.add(WRITE_EXTERNAL_STORAGE)
+            if (SDK_INT < 31)
+                listPermissionNeeded.add(WRITE_EXTERNAL_STORAGE)
         }
         if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
             listPermissionNeeded.add(CAMERA)
         }
 
         if (listPermissionNeeded.isNotEmpty()) {
+            Log.e("shut the fuck up", listPermissionNeeded.toString())
             ActivityCompat.requestPermissions(this, listPermissionNeeded.toTypedArray(), 1)
-        } else {
-//            isGranted = true
         }
         return true
     }
@@ -384,7 +518,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val permissionMap : HashMap<String, Int> = HashMap()
 
                 // Initialize the map with permissions
-                permissionMap[READ_EXTERNAL_STORAGE] = PackageManager.PERMISSION_GRANTED
+                if (SDK_INT > 32) {
+                    permissionMap[READ_MEDIA_IMAGES] = PackageManager.PERMISSION_GRANTED
+                    permissionMap[READ_MEDIA_VIDEO] = PackageManager.PERMISSION_GRANTED
+                } else
+                    permissionMap[READ_EXTERNAL_STORAGE] = PackageManager.PERMISSION_GRANTED
+
                 permissionMap[WRITE_EXTERNAL_STORAGE] = PackageManager.PERMISSION_GRANTED
                 permissionMap[CAMERA] = PackageManager.PERMISSION_GRANTED
 
@@ -392,7 +531,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     for (i in permissions.indices) {
                         permissionMap[permissions[i]] = grantResults[i]
                     }
-                    if (permissionMap[READ_EXTERNAL_STORAGE] == PackageManager.PERMISSION_GRANTED &&
+                    if (permissionMap[READ_EXTERNAL_STORAGE] == PackageManager.PERMISSION_GRANTED ||
+                        (permissionMap[READ_MEDIA_IMAGES] == PackageManager.PERMISSION_GRANTED &&
+                        permissionMap[READ_MEDIA_VIDEO] == PackageManager.PERMISSION_GRANTED) &&
                         permissionMap[WRITE_EXTERNAL_STORAGE] == PackageManager.PERMISSION_GRANTED &&
                             permissionMap[CAMERA] == PackageManager.PERMISSION_GRANTED) {
 //                        isGranted = true
@@ -404,6 +545,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         Log.d("Permissions", "Some permissions not granted ask again")
 
                         if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE) ||
+                            ActivityCompat.shouldShowRequestPermissionRationale(this, READ_MEDIA_IMAGES) ||
+                            ActivityCompat.shouldShowRequestPermissionRationale(this, READ_MEDIA_VIDEO) ||
                             ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE) ||
                                 ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA)) {
                             showDialogOK("Storage Permission required for this app") { dialog, which ->

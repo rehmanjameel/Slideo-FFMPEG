@@ -13,6 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.config.Configurations
+import com.lassi.domain.media.LassiOption
+import com.lassi.domain.media.MediaType
+import com.lassi.presentation.builder.Lassi
 import java.io.*
 import java.text.DecimalFormat
 import java.util.*
@@ -116,52 +119,65 @@ object Common {
     }
 
     fun selectFile(activity: AppCompatActivity, maxSelection: Int, isImageSelection: Boolean, isAudioSelection: Boolean) {
-        val intent = Intent(activity, FilePickerActivity::class.java)
+//        val intent = Intent(activity, FilePickerActivity::class.java)
+//        val intent = Lassi(activity).with(LassiOption.CAMERA)
+//            .setMaxCount(maxSelection)
+//            .setGridSize(3)
+//            .setMediaType(MediaType.IMAGE)
+//            .setCompressionRation(10)
+//            .build()
         when {
             isImageSelection -> {
-                intent.putExtra(
-                    FilePickerActivity.CONFIGS, Configurations.Builder()
-                        .setCheckPermission(true)
-                        .setShowImages(true)
-                        .setShowVideos(false)
-                        .setShowAudios(true)
-                        .enableImageCapture(true)
-                        .enableVideoCapture(false)
-                        .setMaxSelection(maxSelection)
-                        .setSkipZeroSizeFiles(true)
-                        .build()
-                )
+                val intent = Lassi(activity).with(LassiOption.CAMERA_AND_GALLERY)
+                    .setMaxCount(maxSelection)
+                    .setGridSize(3)
+                    .setMediaType(MediaType.IMAGE)
+                    .setCompressionRation(10)
+                    .build()
+//                intent.putExtra(
+//                    FilePickerActivity.CONFIGS, Configurations.Builder()
+//                        .setCheckPermission(false)
+//                        .setShowImages(true)
+//                        .setShowVideos(false)
+//                        .setShowAudios(true)
+//                        .enableImageCapture(true)
+//                        .enableVideoCapture(false)
+//                        .setMaxSelection(maxSelection)
+//                        .setSkipZeroSizeFiles(true)
+//                        .build()
+//                )
+//                intent.action = Intent.ACTION_GET_CONTENT;
                 activity.startActivityForResult(intent, IMAGE_FILE_REQUEST_CODE)
             }
-            isAudioSelection -> {
-                intent.putExtra(
-                    FilePickerActivity.CONFIGS, Configurations.Builder()
-                        .setCheckPermission(true)
-                        .setShowImages(false)
-                        .setShowVideos(false)
-                        .setShowAudios(true)
-                        .enableImageCapture(false)
-                        .enableVideoCapture(false)
-                        .setMaxSelection(maxSelection)
-                        .setSkipZeroSizeFiles(true)
-                        .build()
-                )
-                activity.startActivityForResult(intent, AUDIO_FILE_REQUEST_CODE)
-            }
-            else -> {
-                intent.putExtra(
-                    FilePickerActivity.CONFIGS, Configurations.Builder()
-                        .setCheckPermission(true)
-                        .setShowImages(false)
-                        .setShowVideos(true)
-                        .enableImageCapture(false)
-                        .enableVideoCapture(true)
-                        .setMaxSelection(maxSelection)
-                        .setSkipZeroSizeFiles(true)
-                        .build()
-                )
-                activity.startActivityForResult(intent, VIDEO_FILE_REQUEST_CODE)
-            }
+//            isAudioSelection -> {
+//                intent.putExtra(
+//                    FilePickerActivity.CONFIGS, Configurations.Builder()
+//                        .setCheckPermission(false)
+//                        .setShowImages(false)
+//                        .setShowVideos(false)
+//                        .setShowAudios(true)
+//                        .enableImageCapture(false)
+//                        .enableVideoCapture(false)
+//                        .setMaxSelection(maxSelection)
+//                        .setSkipZeroSizeFiles(true)
+//                        .build()
+//                )
+//                activity.startActivityForResult(intent, AUDIO_FILE_REQUEST_CODE)
+//            }
+//            else -> {
+//                intent.putExtra(
+//                    FilePickerActivity.CONFIGS, Configurations.Builder()
+//                        .setCheckPermission(false)
+//                        .setShowImages(false)
+//                        .setShowVideos(true)
+//                        .enableImageCapture(false)
+//                        .enableVideoCapture(true)
+//                        .setMaxSelection(maxSelection)
+//                        .setSkipZeroSizeFiles(true)
+//                        .build()
+//                )
+//                activity.startActivityForResult(intent, VIDEO_FILE_REQUEST_CODE)
+//            }
         }
     }
 
