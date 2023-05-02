@@ -155,7 +155,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+//                    TODO("Not yet implemented")
+                    Log.e("cancelled", "error")
                 }
 
             })

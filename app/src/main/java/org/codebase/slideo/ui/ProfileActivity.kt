@@ -27,6 +27,8 @@ class ProfileActivity : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val uidRef = rootRef.child("slideo").child(uid)
 
+        Log.e("name of user", uidRef.key.toString())
+
         uidRef.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val snapShot = task.result
