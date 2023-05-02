@@ -37,6 +37,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.model.MediaFile
+import com.lassi.common.utils.KeyUtils
+import com.lassi.data.media.MiMedia
 import com.simform.videooperations.*
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -51,11 +53,11 @@ import org.codebase.slideo.videoProcessActivity.CombineImages
 import org.codebase.slideo.viewmodel.SplashScreenViewModel
 import java.io.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, FileSelection {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     var toolbar: androidx.appcompat.widget.Toolbar? = null
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
-    var mediaFiles: List<MediaFile>? = null
+    var mediaFiles: List<MiMedia>? = null
     private var isImageSelected: Boolean = false
     private val ffmpegQueryExtension = FFmpegQueryExtension()
 
@@ -183,9 +185,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && data != null) {
-            mediaFiles = data.parcelableArrayList("MEDIA_FILES")
+            mediaFiles = data.parcelableArrayList(KeyUtils.SELECTED_MEDIA)
             Log.e("mdeia files ", "$data ${mediaFiles.toString()}")
-            (this as FileSelection).selectedFiles(mediaFiles, requestCode)
+            selectedFiles(mediaFiles, requestCode)
         }
     }
 
@@ -206,7 +208,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         else -> @Suppress("DEPRECATION") getParcelableArrayListExtra(key)
     }
 
-    override fun selectedFiles(mediaFiles: List<MediaFile>?, requestCode: Int) {
+    fun selectedFiles(mediaFiles: List<MiMedia>?, requestCode: Int) {
         when (requestCode) {
             Common.IMAGE_FILE_REQUEST_CODE -> {
                 if (mediaFiles != null && mediaFiles.isNotEmpty()) {
@@ -270,7 +272,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mediaFiles?.let {
             for (element in it) {
                 val paths = Paths()
-                paths.filePath = element.path
+                paths.filePath = element.path.toString()
                 paths.isImageFile = true
                 pathsList.add(paths)
             }
