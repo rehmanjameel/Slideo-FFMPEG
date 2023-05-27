@@ -449,8 +449,8 @@ class CombineImages : AppCompatActivity() {
                 uidRef.addChildEventListener(object : ChildEventListener {
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 //                        roomDB.saveVideoDao().deleteFireVideos()
-                        roomDB.saveVideoDao().addFireVideo(VideosModel(videoId = 0,
-                            videoUri = "${snapshot.child("videoUri").value}", videoKey = snapshot.key.toString()))
+//                        roomDB.saveVideoDao().addFireVideo(VideosModel(videoId = 0,
+//                            videoUri = "${snapshot.child("videoUri").value}", videoKey = snapshot.key.toString()))
                         Log.e("childListener", "${snapshot.child("videoUri").value}" +
                                 " ./,${snapshot.key}./, ${snapshot.value} ./,${snapshot.children}")
                     }
