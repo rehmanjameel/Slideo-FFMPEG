@@ -5,60 +5,58 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_login.view.*
-import org.codebase.slideo.MainActivity
 import org.codebase.slideo.R
+import org.codebase.slideo.databinding.ActivityLoginBinding
 import org.codebase.slideo.utils.App
-import org.codebase.slideo.viewmodel.SplashScreenViewModel
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        val view = binding.root
 //        window.setFlags(
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         window.statusBarColor = resources.getColor(R.color.top_bar)
-        setContentView(R.layout.activity_login)
+        setContentView(view)
 
         auth = Firebase.auth
 
-        loginButtonId.setOnClickListener {
+        binding.loginButtonId.setOnClickListener {
             validateLoginFields()
         }
 
-        openSignUpPage.setOnClickListener {
+        binding.openSignUpPage.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
         }
 
-        backArrow.setOnClickListener {
+        binding.backArrow.setOnClickListener {
             onBackPressed()
         }
     }
 
     private fun validateLoginFields() {
-        val loginEmail = loginEmailId.text.toString()
-        val loginPassword = loginPasswordId.text.toString().trim()
+        val loginEmail = binding.loginEmailId.text.toString()
+        val loginPassword = binding.loginPasswordId.text.toString().trim()
 
         if (loginEmail.isEmpty() && loginPassword.isEmpty()) {
-            loginEmailId.error = "Email is required"
-            loginPasswordId.error = "Email is required"
+            binding.loginEmailId.error = "Email is required"
+            binding.loginPasswordId.error = "Email is required"
         } else if (loginEmail.isEmpty()) {
-            loginEmailId.error = "Email is required"
+            binding.loginEmailId.error = "Email is required"
         } else if (loginPassword.isEmpty()) {
-            loginPasswordId.error = "Password is required"
+            binding.loginPasswordId.error = "Password is required"
         } else {
-            mProgressView.visibility = View.VISIBLE
+            binding.mProgressView.mProgress.visibility = View.VISIBLE
             login(email = loginEmail, password = loginPassword)
         }
 
@@ -68,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 val user = auth.currentUser
-                mProgressView.visibility = View.GONE
+                binding.mProgressView.mProgress.visibility = View.GONE
 
                 Log.e("user login", "${user!!.uid} ${user.reload()}" )
                 val intent = Intent(this, ProfileActivity::class.java)
@@ -77,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
                 App.saveLogin(true)
 
             } else {
-                mProgressView.visibility = View.GONE
+                binding.mProgressView.mProgress.visibility = View.GONE
 
                 Toast.makeText(baseContext, "Authentication failed.",
                     Toast.LENGTH_SHORT).show()

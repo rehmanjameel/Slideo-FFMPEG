@@ -6,14 +6,14 @@ import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.simform.videooperations.Common
-import kotlinx.android.synthetic.main.custom_controller.view.*
-import kotlinx.android.synthetic.main.video_view_layout.view.*
 import org.codebase.slideo.R
 import org.codebase.slideo.db.RoomDB
 import org.codebase.slideo.models.SaveVideoModel
@@ -29,7 +29,10 @@ class VideosLibraryAdapter(context: Context):
     lateinit var roomDB: RoomDB
 
     class VideosViewHolder(itemView: View) : ViewHolder(itemView) {
-
+        val fullScreen: ImageView = itemView.findViewById(R.id.imageViewFullScreen)
+        val shareVideo: ImageView = itemView.findViewById(R.id.shareVideoId)
+        val deleteVideo: ImageView = itemView.findViewById(R.id.deleteVideoId)
+        val player: PlayerView = itemView.findViewById(R.id.playerId)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideosViewHolder {
@@ -43,12 +46,12 @@ class VideosLibraryAdapter(context: Context):
 
         roomDB = RoomDB.getDataBase(myContext)
 
-        holder.itemView.imageViewFullScreen.visibility = View.GONE
+        holder.fullScreen.visibility = View.GONE
         exoPlayer = ExoPlayer.Builder(myContext).setSeekBackIncrementMs(5000L)
             .setSeekForwardIncrementMs(5000L)
             .build()
         exoPlayer?.playWhenReady = false
-        holder.itemView.playerId.player = exoPlayer
+        holder.player.player = exoPlayer
 
         exoPlayer?.apply {
             setMediaItem(MediaItem.fromUri(videoModel.path))
@@ -58,10 +61,10 @@ class VideosLibraryAdapter(context: Context):
             prepare()
         }
 
-        holder.itemView.shareVideoId.setOnClickListener {
+        holder.shareVideo.setOnClickListener {
             Common.startFileShareIntent(myContext, videoModel.path, "video")
         }
-        holder.itemView.deleteVideoId.setOnClickListener {
+        holder.deleteVideo.setOnClickListener {
             val builder = MaterialAlertDialogBuilder(myContext)
 
             builder.setIcon(R.drawable.ic_baseline_warning_amber_24)

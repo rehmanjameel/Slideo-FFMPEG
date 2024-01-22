@@ -5,19 +5,18 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.simform.videooperations.Common
-import kotlinx.android.synthetic.main.custom_controller.view.*
-import kotlinx.android.synthetic.main.video_view_layout.view.*
 import org.codebase.slideo.R
 import org.codebase.slideo.db.RoomDB
-import org.codebase.slideo.models.SaveVideoModel
 import org.codebase.slideo.models.VideosModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -32,6 +31,11 @@ class FireVideosAdapter(context: Context):
     lateinit var roomDB: RoomDB
 
     class FireViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        val fireImage: ImageView = itemView.findViewById(R.id.fireImageId)
+        val fullScreen: ImageView = itemView.findViewById(R.id.imageViewFullScreen)
+        val shareVideo: ImageView = itemView.findViewById(R.id.shareVideoId)
+        val deleteVideo: ImageView = itemView.findViewById(R.id.deleteVideoId)
+        val player: PlayerView = itemView.findViewById(R.id.playerId)
 
     }
 
@@ -45,13 +49,13 @@ class FireVideosAdapter(context: Context):
 
         roomDB = RoomDB.getDataBase(myContext)
 
-        holder.itemView.imageViewFullScreen.visibility = View.GONE
-        holder.itemView.fireImageId.visibility = View.VISIBLE
+        holder.fullScreen.visibility = View.GONE
+        holder.fireImage.visibility = View.VISIBLE
         exoPlayer = ExoPlayer.Builder(myContext).setSeekBackIncrementMs(5000L)
             .setSeekForwardIncrementMs(5000L)
             .build()
         exoPlayer?.playWhenReady = false
-        holder.itemView.playerId.player = exoPlayer
+        holder.player.player = exoPlayer
 
         exoPlayer?.apply {
             setMediaItem(MediaItem.fromUri(videoModel.videoUri))
@@ -61,7 +65,7 @@ class FireVideosAdapter(context: Context):
             prepare()
         }
 
-        holder.itemView.shareVideoId.setOnClickListener {
+        holder.shareVideo.setOnClickListener {
             Common.startFileShareIntent(myContext, videoModel.videoUri, "video")
         }
         val fileName = UUID.randomUUID().toString()
@@ -69,7 +73,7 @@ class FireVideosAdapter(context: Context):
         // get user info
         val rootRef = FirebaseDatabase.getInstance().reference
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        holder.itemView.deleteVideoId.setOnClickListener {
+        holder.deleteVideo.setOnClickListener {
             val builder = MaterialAlertDialogBuilder(myContext)
 
             builder.setIcon(R.drawable.ic_baseline_warning_amber_24)

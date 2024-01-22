@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.WindowManager
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
@@ -21,8 +20,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.activity_sign_up.*
 import org.codebase.slideo.R
+import org.codebase.slideo.databinding.ActivitySignUpBinding
 import org.codebase.slideo.models.UserModel
 import org.codebase.slideo.utils.App
 import java.util.*
@@ -30,6 +29,7 @@ import java.util.regex.Pattern
 
 class SignUpActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivitySignUpBinding
     var firebaseAuth = FirebaseAuth.getInstance()
     var imageUri: Uri? = null
 
@@ -39,29 +39,31 @@ class SignUpActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
+        val view = binding.root
 //        window.setFlags(
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
 //            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         window.statusBarColor = resources.getColor(R.color.top_bar)
 
-        setContentView(R.layout.activity_sign_up)
+        setContentView(view)
 
         supportActionBar?.hide()
 
         // initialize the firebaseAuth variable
         firebaseAuth = FirebaseAuth.getInstance()
 
-        signUpButton.setOnClickListener {
+        binding.signUpButton.setOnClickListener {
             checkValidations()
         }
 
-        selectImage.setOnClickListener { pickImage() }
+        binding.selectImage.setOnClickListener { pickImage() }
 
-        backArrow.setOnClickListener {
+        binding.backArrow.setOnClickListener {
             onBackPressed()
         }
 
-        openLoginPage.setOnClickListener {
+        binding.openLoginPage.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
@@ -77,7 +79,7 @@ class SignUpActivity : AppCompatActivity() {
                 Glide.with(applicationContext)
                     .load(imageUri)
                     .error(R.drawable.ic_baseline_person_24)
-                    .into(userSignUpImage)
+                    .into(binding.userSignUpImage)
             } else {
                 Log.e("Error", "Image not set")
             }
@@ -139,7 +141,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun getRadioButtonText() {
         //Getting radio button text on the base of radio button id
-        val radioButtonId: Int = genderRadioGroup.checkedRadioButtonId
+        val radioButtonId: Int = binding.genderRadioGroup.checkedRadioButtonId
         if (radioButtonId != -1) {
             radioButtons = findViewById(radioButtonId)
         }
@@ -149,26 +151,26 @@ class SignUpActivity : AppCompatActivity() {
     private fun checkValidations() {
         getRadioButtonText()
 
-        val userName = signUpUserName.text.toString()
-        val userEmail = signUpEmail.text.toString()
-        val userPassword = signUpPassword.text.toString()
-        val confirmPassword = signUpConfirmPassword.text.toString()
+        val userName = binding.signUpUserName.text.toString()
+        val userEmail = binding.signUpEmail.text.toString()
+        val userPassword = binding.signUpPassword.text.toString()
+        val confirmPassword = binding.signUpConfirmPassword.text.toString()
 
         if (userName.isEmpty() && userEmail.isEmpty() && userPassword.isEmpty() && confirmPassword.isEmpty()) {
-            signUpUserName.error = "Field required"
-            signUpEmail.error = "Field required"
-            signUpPassword.error = "Field required"
-            signUpConfirmPassword.error = "Field required"
+            binding.signUpUserName.error = "Field required"
+            binding.signUpEmail.error = "Field required"
+            binding.signUpPassword.error = "Field required"
+            binding.signUpConfirmPassword.error = "Field required"
         } else if (userName.isEmpty() || !isValidFirstLastName(userName)) {
-            signUpUserName.error = "Field required or invalid data"
+            binding.signUpUserName.error = "Field required or invalid data"
         } else if (userEmail.isEmpty() || !isValidMail(userEmail)) {
-            signUpEmail.error = "Field required or invalid email"
+            binding.signUpEmail.error = "Field required or invalid email"
         } else if (userPassword.isEmpty() || !isValidPasswordFormat(userPassword)) {
-            signUpPassword.error = "Field required or password is weak"
+            binding.signUpPassword.error = "Field required or password is weak"
         } else if (confirmPassword.isEmpty() || confirmPassword != userPassword) {
-            signUpConfirmPassword.error = "Field required or password not matched"
+            binding.signUpConfirmPassword.error = "Field required or password not matched"
         } else {
-            mProgressView.visibility = View.VISIBLE
+            binding.mProgressView.mProgress.visibility = View.VISIBLE
 
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(userEmail, confirmPassword)
                 .addOnCompleteListener {
@@ -181,7 +183,7 @@ class SignUpActivity : AppCompatActivity() {
                     uploadImageToFirebaseStorage(userName, userEmail, radioButtonText)
                 }
                 .addOnFailureListener {e->
-                    mProgressView.visibility = View.GONE
+                    binding.mProgressView.mProgress.visibility = View.GONE
                     Toast.makeText(this, "${e.message}", Toast.LENGTH_LONG).show()
                     Log.e("Failure","${e.message}")
                 }
@@ -205,19 +207,19 @@ class SignUpActivity : AppCompatActivity() {
 
                     App.saveString("ProfileImageUrl", imageUri.toString())
                     saveUserToFireBaseDatabase(userName, imageUri.toString(), email, gender)
-                    mProgressView.visibility = View.GONE
+                    binding.mProgressView.mProgress.visibility = View.GONE
 
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
                     finish()
                 }.addOnFailureListener {e ->
-                    mProgressView.visibility = View.GONE
+                    binding.mProgressView.mProgress.visibility = View.GONE
 
                     Toast.makeText(this, "${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
             .addOnFailureListener {
-                mProgressView.visibility = View.GONE
+                binding.mProgressView.mProgress.visibility = View.GONE
                 Log.d("ImageUri", "File Location failed")
             }
     }
@@ -233,10 +235,10 @@ class SignUpActivity : AppCompatActivity() {
         val ref = FirebaseDatabase.getInstance().getReference("slideo/${FirebaseAuth.getInstance().currentUser!!.uid}")
         ref.setValue(userData).addOnCompleteListener{ valuesSent ->
                 if (valuesSent.isSuccessful) {
-                    mProgressView.visibility = View.GONE
+                    binding.mProgressView.mProgress.visibility = View.GONE
                     Toast.makeText(this, "Registered successfully", Toast.LENGTH_SHORT).show()
                 } else {
-                    mProgressView.visibility = View.GONE
+                    binding.mProgressView.mProgress.visibility = View.GONE
                     Toast.makeText(this, "Registration failed ${valuesSent.exception!!.message}",
                         Toast.LENGTH_SHORT).show()
                 }

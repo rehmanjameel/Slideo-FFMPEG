@@ -41,10 +41,7 @@ import com.lassi.common.utils.KeyUtils
 import com.lassi.data.media.MiMedia
 import com.simform.videooperations.*
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_profile.*
-import kotlinx.android.synthetic.main.drawer_header.*
-import org.codebase.slideo.ui.AudioActivity
+import org.codebase.slideo.databinding.ActivityMainBinding
 import org.codebase.slideo.ui.LoginActivity
 import org.codebase.slideo.ui.ProfileActivity
 import org.codebase.slideo.ui.VideosActivity
@@ -55,6 +52,7 @@ import java.io.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    private lateinit var binding: ActivityMainBinding
     var toolbar: androidx.appcompat.widget.Toolbar? = null
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     var mediaFiles: List<MiMedia>? = null
@@ -74,40 +72,42 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
         //installSplashScreen function must be before the 'super' method
         installSplashScreen().apply {
             setKeepOnScreenCondition{
                 splashViewModel.isLoading.value
             }
         }
-        setContentView(R.layout.activity_main)
+        setContentView(view)
 
         context = this
         auth = Firebase.auth
 
-        setSupportActionBar(my_awesome_toolbar)
+        setSupportActionBar(binding.myAwesomeToolbar)
 
         checkPermissions()
 
-        actionBarDrawerToggle = ActionBarDrawerToggle(this, myDrawerLayoutId,
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.myDrawerLayoutId,
             R.string.nav_open, R.string.nav_close)
 
-        myDrawerLayoutId.addDrawerListener(actionBarDrawerToggle)
+        binding.myDrawerLayoutId.addDrawerListener(actionBarDrawerToggle)
 
         actionBarDrawerToggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        navMenuId.setNavigationItemSelectedListener(this)
+        binding.navMenuId.setNavigationItemSelectedListener(this)
 
-        val hView = navMenuId.getHeaderView(0)
+        val hView = binding.navMenuId.getHeaderView(0)
 
 
 
         hImageView = hView.findViewById(R.id.headerImage)
         textView = hView.findViewById(R.id.headerProfileNameId)
 
-        createVideoCardId.setOnClickListener {
+        binding.createVideoCardId.setOnClickListener {
             Log.e("in permissions yes", checkPermissions().toString())
 
             Common.selectFile(this, maxSelection = 6, isImageSelection = true, isAudioSelection = true)
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        myVideosCardId.setOnClickListener {
+        binding.myVideosCardId.setOnClickListener {
             Log.e("clicking ob button", "$it")
             val intent = Intent(this, VideosActivity::class.java)
             startActivity(intent)
@@ -214,7 +214,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             Common.IMAGE_FILE_REQUEST_CODE -> {
                 if (mediaFiles != null && mediaFiles.isNotEmpty()) {
                     val size: Int = mediaFiles.size
-                    tvInputPathImage.text = "$size" + (if (size == 1) " Image " else " Images ") + "selected"
+                    binding.tvInputPathImage.text = "$size" + (if (size == 1) " Image " else " Images ") + "selected"
                     isImageSelected = true
                     processStart()
                     combineImagesProcess()
@@ -258,13 +258,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun processStop() {
 //        btnImagePath.isEnabled = true
 //        btnCombine.isEnabled = true
-        mProgressView.visibility = View.GONE
+//        binding.mProgressView.mProgress.visibility = View.GONE
     }
 
     private fun processStart() {
 //        btnImagePath.isEnabled = false
 //        btnCombine.isEnabled = false
-        mProgressView.visibility = View.VISIBLE
+//        binding.mProgressView.mProgress.visibility = View.VISIBLE
     }
 
     private fun combineImagesProcess() {
@@ -310,7 +310,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        myDrawerLayoutId.openDrawer(navMenuId)
+        binding.myDrawerLayoutId.openDrawer(binding.navMenuId)
         return true
     }
 
@@ -347,8 +347,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     //     override the onBackPressed() function to close the Drawer when the back button is clicked
     override fun onBackPressed() {
-        if (this.myDrawerLayoutId.isDrawerOpen(GravityCompat.START)) {
-            this.myDrawerLayoutId.closeDrawer(GravityCompat.START)
+        if (this.binding.myDrawerLayoutId.isDrawerOpen(GravityCompat.START)) {
+            this.binding.myDrawerLayoutId.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }

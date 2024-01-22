@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_my_videos_library.*
-import kotlinx.android.synthetic.main.fragment_my_videos_library.view.*
 import org.codebase.slideo.R
 
 class VideosLibraryFragment : Fragment() {

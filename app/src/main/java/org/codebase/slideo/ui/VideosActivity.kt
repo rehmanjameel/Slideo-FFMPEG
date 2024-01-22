@@ -6,19 +6,19 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_videos.*
 import org.codebase.slideo.R
 import org.codebase.slideo.adapters.FireVideosAdapter
 import org.codebase.slideo.adapters.VideosLibraryAdapter
+import org.codebase.slideo.databinding.ActivityVideosBinding
 import org.codebase.slideo.db.RoomDB
 import org.codebase.slideo.models.SaveVideoModel
 import org.codebase.slideo.models.VideosModel
 
 class VideosActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityVideosBinding
     lateinit var videoAdapter: VideosLibraryAdapter
     lateinit var fireAdapter: FireVideosAdapter
     lateinit var roomDB: RoomDB
@@ -26,17 +26,19 @@ class VideosActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_videos)
+        binding = ActivityVideosBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        if (videosRVId.equals("")) {
-            noVideoFoundId.visibility = View.VISIBLE
+        if (binding.videosRVId.equals("")) {
+            binding.noVideoFoundId.visibility = View.VISIBLE
         } else {
-            noVideoFoundId.visibility = View.GONE
+            binding.noVideoFoundId.visibility = View.GONE
         }
 
         videoAdapter = VideosLibraryAdapter(this)
-        videosRVId.layoutManager = LinearLayoutManager(this)
-        videosRVId.adapter = videoAdapter
+        binding.videosRVId.layoutManager = LinearLayoutManager(this)
+        binding.videosRVId.adapter = videoAdapter
 
         roomDB = RoomDB.getDataBase(this)
 
@@ -45,8 +47,8 @@ class VideosActivity : AppCompatActivity() {
         })
 
         fireAdapter = FireVideosAdapter(this)
-        fireVideosRVId.layoutManager = LinearLayoutManager(this)
-        fireVideosRVId.adapter = fireAdapter
+        binding.fireVideosRVId.layoutManager = LinearLayoutManager(this)
+        binding.fireVideosRVId.adapter = fireAdapter
 
         roomDB = RoomDB.getDataBase(this)
 
@@ -114,7 +116,7 @@ class VideosActivity : AppCompatActivity() {
             fireAdapter.setData(list as ArrayList<VideosModel>)
         })
 
-        videoBackIcon.setOnClickListener {
+        binding.videoBackIcon.setOnClickListener {
             onBackPressed()
         }
     }

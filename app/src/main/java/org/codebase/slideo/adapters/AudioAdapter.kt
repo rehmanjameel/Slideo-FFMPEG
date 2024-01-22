@@ -1,32 +1,24 @@
 package org.codebase.slideo.adapters
 
 import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.media.MediaPlayer
-import android.media.browse.MediaBrowser.MediaItem
 import android.net.Uri
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsSeekBar
-import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_combine_images.view.*
-import kotlinx.android.synthetic.main.audio_items.view.*
 import org.codebase.slideo.R
 import org.codebase.slideo.models.AudioModel
 import org.codebase.slideo.ui.AudioActivity
 import org.codebase.slideo.utils.App
-import org.codebase.slideo.videoProcessActivity.CombineImages
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.logging.Handler
 import kotlin.collections.ArrayList
 
 class AudioAdapter(context: Activity, private val audioArrayList: ArrayList<AudioModel>) :
@@ -50,17 +42,17 @@ class AudioAdapter(context: Activity, private val audioArrayList: ArrayList<Audi
         audioModel = audioArrayList[position]
 
         val audioDuration = getDate(audioModel.duration, "mm:ss")
-        holder.itemView.audioNameTextId.text = audioModel.title
-        holder.itemView.audioAlbumId.text = audioModel.album
-        holder.itemView.audioDurationId.text = audioDuration
+        holder.textAudioName.text = audioModel.title
+        holder.textAudioAlbum.text = audioModel.album
+        holder.textAudioDuration.text = audioDuration
 
-        holder.itemView.playAudioId.setOnClickListener {
+        holder.linearLayout.setOnClickListener {
             audioModel = audioArrayList[holder.absoluteAdapterPosition]
 //            Log.e("path", audioModel.path)
             (mContext as AudioActivity).playVoice(audioModel.path, audioModel.title)
         }
 
-        holder.itemView.selectVoiceId.setOnClickListener {
+        holder.selectText.setOnClickListener {
             audioModel = audioArrayList[holder.absoluteAdapterPosition]
             App.saveString("audio_path", audioModel.path)
             Toast.makeText(mContext, audioModel.path, Toast.LENGTH_LONG).show()
@@ -128,7 +120,12 @@ class AudioAdapter(context: Activity, private val audioArrayList: ArrayList<Audi
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val textAudioName: TextView = itemView.findViewById(R.id.audioNameTextId)
+        val textAudioAlbum: TextView = itemView.findViewById(R.id.audioAlbumId)
+        val textAudioDuration: TextView = itemView.findViewById(R.id.audioDurationId)
+        val selectText: TextView = itemView.findViewById(R.id.selectVoiceId)
 
+        val linearLayout: LinearLayout = itemView.findViewById(R.id.playAudioId)
 
     }
 

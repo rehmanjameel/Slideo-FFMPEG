@@ -27,12 +27,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.simform.videooperations.*
-import kotlinx.android.synthetic.main.activity_combine_images.*
-import kotlinx.android.synthetic.main.activity_combine_images.mProgressView
-import kotlinx.android.synthetic.main.activity_sign_up.*
-import kotlinx.android.synthetic.main.alert_dialog_layout.*
-import kotlinx.android.synthetic.main.custom_controller.*
 import org.codebase.slideo.R
+import org.codebase.slideo.databinding.ActivityCombineImagesBinding
 import org.codebase.slideo.db.RoomDB
 import org.codebase.slideo.models.SaveVideoModel
 import org.codebase.slideo.models.VideosModel
@@ -43,6 +39,7 @@ import java.util.*
 
 class CombineImages : AppCompatActivity() {
 
+    private lateinit var binding: ActivityCombineImagesBinding
     private var playbackPosition = 0L
     var count = 0
     private var exoPlayer: ExoPlayer? = null
@@ -57,17 +54,19 @@ class CombineImages : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityCombineImagesBinding.inflate(layoutInflater)
+        val view = binding.root
         window.statusBarColor = Color.BLACK
-        setContentView(R.layout.activity_combine_images)
+        setContentView(view)
 
         supportActionBar?.hide()
 
         if (App.isLoggedIn()) {
-            uploadVideoToFirebase.visibility = View.VISIBLE
-            saveVideoToDB.visibility = View.GONE
+            binding.uploadVideoToFirebase.visibility = View.VISIBLE
+            binding.saveVideoToDB.visibility = View.GONE
         } else {
-            uploadVideoToFirebase.visibility = View.GONE
-            saveVideoToDB.visibility = View.VISIBLE
+            binding.uploadVideoToFirebase.visibility = View.GONE
+            binding.saveVideoToDB.visibility = View.VISIBLE
         }
 
         videoPath = intent.getStringExtra("video_path").toString()
@@ -76,15 +75,15 @@ class CombineImages : AppCompatActivity() {
         preparePlayer(videoPath)
 //        setFullScreen()
 
-        imageViewFullScreen.visibility = View.GONE
+//        binding.player.imageViewFullScreen.visibility = View.GONE
 
-        textLayoutId.setOnClickListener {
+        binding.textLayoutId.setOnClickListener {
 //            alertDialogDemo()
             getText()
         }
 
         roomDB = RoomDB.getDataBase(this)
-        saveVideoToDB.setOnClickListener {
+        binding.saveVideoToDB.setOnClickListener {
 //            uploadVideoToFirebaseStorage()
             Log.e("internal path", videoOutPutPath)
             roomDB.saveVideoDao().addVideo(SaveVideoModel(0,
@@ -93,25 +92,25 @@ class CombineImages : AppCompatActivity() {
                 Snackbar.ANIMATION_MODE_SLIDE).show()
         }
 
-        uploadVideoToFirebase.setOnClickListener {
+        binding.uploadVideoToFirebase.setOnClickListener {
             uploadVideoToFirebaseStorage(it)
 //            File(videoPath).delete()
         }
 
-        cancelVideoId.setOnClickListener {
+        binding.cancelVideoId.setOnClickListener {
             App.removeKey("audio_path")
 //            File(videoPath).delete()
             onBackPressed()
         }
 
-        musicImageId.setOnClickListener {
+        binding.musicImageId.setOnClickListener {
             startActivity(Intent(this, AudioActivity::class.java))
         }
 
-        cancelAudioMerging.setOnClickListener {
-            audioPlayerLayoutId.visibility = View.GONE
+        binding.cancelAudioMerging.setOnClickListener {
+            binding.audioPlayerLayoutId.visibility = View.GONE
             App.removeKey("audio_path")
-            voicePlayerView.onStop()
+            binding.voicePlayerView.onStop()
         }
 
     }
@@ -121,10 +120,10 @@ class CombineImages : AppCompatActivity() {
             .setSeekForwardIncrementMs(INCREMENT_MILLIS)
             .build()
         exoPlayer?.playWhenReady = true
-        player.player = exoPlayer
+        binding.player.player = exoPlayer
 
         exoPlayer?.apply {
-            player.scaleX = 1f
+            binding.player.scaleX = 1f
             setMediaItem(MediaItem.fromUri(videoPath))
 //            setMediaSource(buildMediaSource())
             seekTo(playbackPosition)
@@ -165,13 +164,13 @@ class CombineImages : AppCompatActivity() {
 //            (edtYPos.text.toString().toFloat().times(it)).div(100)
 //        }
         val fontPath = Common.getFileFromAssets(this, "chandas.ttf").absolutePath
-        android.util.Log.e("test text is here5454", "$startTime,,.,.$endTime ${(720-videoTextET.measuredWidth)/2f}")
+        android.util.Log.e("test text is here5454", "$startTime,,.,.$endTime ${(720-binding.videoTextET.measuredWidth)/2f}")
 
-        videoTextET.measure(0, 0)
-        Log.e("measure", "${videoTextET.measuredHeight} ${videoTextET.measuredWidth}")
+        binding.videoTextET.measure(0, 0)
+        Log.e("measure", "${binding.videoTextET.measuredHeight} ${binding.videoTextET.measuredWidth}")
         val query = ffmpegQueryExtension.addTextOnVideo(
             App.getString("video_output_path"),
-            textInput, ((720-videoTextET.measuredWidth)/2f), (1080-videoTextET.measuredHeight),
+            textInput, ((720-binding.videoTextET.measuredWidth)/2f), (1080-binding.videoTextET.measuredHeight),
             fontPath = fontPath, isTextBackgroundDisplay = true,
             fontSize = 50, fontcolor = "white", output = videoOutPutPath, startTime, endTime)
         CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
@@ -203,20 +202,20 @@ class CombineImages : AppCompatActivity() {
     }
 
     private fun getText() {
-        val videoText = videoTextET.text.toString()
-        val videoTextStartTime = videoTextStartTimeET.text.toString()
-        val videoTextEndTime = videoTextEndTimeET.text.toString()
+        val videoText = binding.videoTextET.text.toString()
+        val videoTextStartTime = binding.videoTextStartTimeET.text.toString()
+        val videoTextEndTime = binding.videoTextEndTimeET.text.toString()
 
         if (videoText.isNotEmpty()) {
             addTextProcess(textInput = videoText, startTime = videoTextStartTime, endTime = videoTextEndTime)
-            videoTextET.setText("")
-            videoTextStartTimeET.setText("")
-            videoTextEndTimeET.setText("")
+            binding.videoTextET.setText("")
+            binding.videoTextStartTimeET.setText("")
+            binding.videoTextEndTimeET.setText("")
 //            videoTextET.isFocusable = false
 //            videoTextStartTimeET.isFocusable = false
 //            videoTextEndTimeET.isFocusable = false
         } else {
-            videoTextET.error = "Text is required"
+            binding.videoTextET.error = "Text is required"
         }
     }
 
@@ -258,11 +257,11 @@ class CombineImages : AppCompatActivity() {
     }
 
     private fun processStop() {
-        mProgressView.visibility = View.GONE
+        binding.mProgressView.mProgress.visibility = View.GONE
     }
 
     private fun processStart() {
-        mProgressView.visibility = View.VISIBLE
+        binding.mProgressView.mProgress.visibility = View.VISIBLE
     }
 
     override fun onResume() {
@@ -271,15 +270,15 @@ class CombineImages : AppCompatActivity() {
         intentAudioPath = App.getString("audio_path")
         Log.e("intent path", intentAudioPath)
         if (intentAudioPath.isNotEmpty()) {
-            audioPlayerLayoutId.visibility = View.VISIBLE
-            voicePlayerView.setAudio(intentAudioPath)
+            binding.audioPlayerLayoutId.visibility = View.VISIBLE
+            binding.voicePlayerView.setAudio(intentAudioPath)
             preparePlayer(App.getString("video_output_path"))
-            mergeAudioId.setOnClickListener {
+            binding.mergeAudioId.setOnClickListener {
                 processStart()
                 mergeAudioVideo(intentAudioPath)
             }
         } else {
-            audioPlayerLayoutId.visibility = View.GONE
+            binding.audioPlayerLayoutId.visibility = View.GONE
         }
 
     }
@@ -307,7 +306,7 @@ class CombineImages : AppCompatActivity() {
     override fun onBackPressed() {
         if (isLock) return
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            imageViewFullScreen.performClick()
+//            binding.imageViewFullScreen.performClick()
             App.removeKey("audio_path")
         } else super.onBackPressed()
     }
@@ -361,35 +360,35 @@ class CombineImages : AppCompatActivity() {
 
     @SuppressLint("SourceLockedOrientationActivity")
     private fun setFullScreen() {
-        imageViewFullScreen.setOnClickListener {
-
-            if (!isFullScreen) {
-                imageViewFullScreen.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        applicationContext,
-                        R.drawable.ic_baseline_fullscreen_exit
-                    )
-                )
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-
-            } else {
-                imageViewFullScreen.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        applicationContext,
-                        R.drawable.ic_baseline_fullscreen
-                    )
-                )
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            }
-            isFullScreen = !isFullScreen
-        }
+//        binding.imageViewFullScreen.setOnClickListener {
+//
+//            if (!isFullScreen) {
+//                binding.imageViewFullScreen.setImageDrawable(
+//                    ContextCompat.getDrawable(
+//                        applicationContext,
+//                        R.drawable.ic_baseline_fullscreen_exit
+//                    )
+//                )
+//                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+//
+//            } else {
+//                binding.imageViewFullScreen.setImageDrawable(
+//                    ContextCompat.getDrawable(
+//                        applicationContext,
+//                        R.drawable.ic_baseline_fullscreen
+//                    )
+//                )
+//                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//            }
+//            isFullScreen = !isFullScreen
+//        }
     }
 
     private fun uploadVideoToFirebaseStorage(view: View) {
         val videoPath = App.getString("video_output_path")
         Log.e("video out path in", videoPath)
         if (videoPath.isEmpty()) return
-        mProgressView.visibility = View.VISIBLE
+        binding.mProgressView.mProgress.visibility = View.VISIBLE
         val fileName = UUID.randomUUID().toString()
         val ref = FirebaseStorage.getInstance().getReference("slideo_profile/$fileName")
         ref.putFile(File(videoPath).toUri())
@@ -402,13 +401,13 @@ class CombineImages : AppCompatActivity() {
                     saveUserToFireBaseDatabase(view, videoUri.toString())
 
                 }.addOnFailureListener {e ->
-                    mProgressView.visibility = View.GONE
+                    binding. mProgressView.mProgress.visibility = View.GONE
 
                     Toast.makeText(this, "${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
             .addOnFailureListener {
-                mProgressView.visibility = View.GONE
+                binding.mProgressView.mProgress.visibility = View.GONE
                 android.util.Log.d("ImageUri", "File Location failed")
             }
     }
@@ -423,7 +422,7 @@ class CombineImages : AppCompatActivity() {
             .child("videos").child("${System.currentTimeMillis()}")
         ref.setValue(userVideos).addOnCompleteListener{ videoSent ->
             if (videoSent.isSuccessful) {
-                mProgressView.visibility = View.GONE
+                binding.mProgressView.mProgress.visibility = View.GONE
                 Snackbar.make(this, view, "Video Saved Successfully!",
                     Snackbar.ANIMATION_MODE_SLIDE).show()
                 count ++
@@ -485,7 +484,7 @@ class CombineImages : AppCompatActivity() {
 
                 Toast.makeText(this, "video saved successfully!", Toast.LENGTH_SHORT).show()
             } else {
-                mProgressView.visibility = View.GONE
+                binding.mProgressView.mProgress.visibility = View.GONE
                 Toast.makeText(this, "video sent failed ${videoSent.exception!!.message}",
                     Toast.LENGTH_SHORT).show()
             }

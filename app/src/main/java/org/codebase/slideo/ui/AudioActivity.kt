@@ -7,16 +7,16 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_audio.*
-import kotlinx.android.synthetic.main.activity_combine_images.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import org.codebase.slideo.R
 import org.codebase.slideo.adapters.AudioAdapter
+import org.codebase.slideo.databinding.ActivityAudioBinding
 import org.codebase.slideo.models.AudioModel
 import java.io.File
 
 class AudioActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityAudioBinding
     companion object{
         private lateinit var audioList: ArrayList<AudioModel>
     }
@@ -26,23 +26,25 @@ class AudioActivity : AppCompatActivity() {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_audio)
+        binding = ActivityAudioBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
 //        audioList = ArrayList()
 
         audioList = getAllAudios()
-        audioRecyclerViewId.layoutManager = LinearLayoutManager(this@AudioActivity)
+        binding.audioRecyclerViewId.layoutManager = LinearLayoutManager(this@AudioActivity)
         audioAdapter = AudioAdapter(this@AudioActivity, audioList)
 
-        audioRecyclerViewId.adapter = audioAdapter
+        binding.audioRecyclerViewId.adapter = audioAdapter
 
-        backImageId.setOnClickListener {
+        binding.backImageId.setOnClickListener {
             onBackPressed()
         }
 
-        stopVoiceId.setOnClickListener {
-            voicePlayerViewId.onStop()
-            voicePlayerLayout.visibility = View.GONE
+        binding.stopVoiceId.setOnClickListener {
+            binding.voicePlayerViewId.onStop()
+            binding.voicePlayerLayout.visibility = View.GONE
         }
 //        asyncTask.execute(null.toString())
 //        val looper = Looper.getMainLooper()
@@ -100,15 +102,15 @@ class AudioActivity : AppCompatActivity() {
     }
 
     fun playVoice(voicePath: String, title: String) {
-        voicePlayerLayout.visibility = View.VISIBLE
-        voiceTitleId.text = title
-        voicePlayerViewId.refreshPlayer(voicePath)
+        binding.voicePlayerLayout.visibility = View.VISIBLE
+        binding.voiceTitleId.text = title
+        binding.voicePlayerViewId.refreshPlayer(voicePath)
     }
 
     override fun onPause() {
         super.onPause()
-        voicePlayerLayout.visibility = View.GONE
-        voicePlayerViewId.onStop()
+        binding.voicePlayerLayout.visibility = View.GONE
+        binding.voicePlayerViewId.onStop()
     }
 
 //    val asyncTask = object : AsyncTaskResolver<String, Boolean, Boolean>() {
